@@ -68,10 +68,10 @@ public class Main extends LinearOpMode {
             while (opModeIsActive()) {
                 // Put loop blocks here.
                 if (0 < gamepad2.left_stick_y) {
-                    fIntake = gamepad2.left_stick_y * 0.25;
+                    fIntake = -(gamepad2.left_stick_y) * 0.25;
                     intake.setPower(fIntake);
                 } else if (0 > gamepad2.left_stick_y) {
-                    fIntake = gamepad2.left_stick_y * 0.25;
+                    fIntake = -(gamepad2.left_stick_y) * 0.25;
                     intake.setPower(fIntake);
                 } else if (0 == gamepad2.left_stick_y) {
                     fIntake = 0;
@@ -89,7 +89,7 @@ public class Main extends LinearOpMode {
                 SOFTWARE_LIMIT();
 
                 float topStop = 0.3F;
-                if (gamepad2.right_stick_y > 0 ) {
+                if ( (gamepad2.right_stick_y > 0) && (limit_reached_armtop == 0)) {
                     fArmTop = -(gamepad2.right_stick_y);
                     armtop.setPower(fArmTop);
                 }  else if (gamepad2.right_stick_y < 0) {
@@ -245,6 +245,8 @@ public class Main extends LinearOpMode {
                 telemetry.addData("Claw", servoclaw.getPosition());
                 telemetry.addData("gamepad2.right_trigger", gamepad2.right_trigger);
                 telemetry.addData("Intake Claw", clawservo.getPosition());
+                telemetry.addData("armbottom_zeroPower", armbottom.getZeroPowerBehavior());
+                telemetry.addData("armtop_zeroPower", armtop.getZeroPowerBehavior());
                 telemetry.update();
             }
 
@@ -271,8 +273,14 @@ public class Main extends LinearOpMode {
     private void SOFTWARE_LIMIT() {
         if (armbottom.getCurrentPosition() > 3900) {
             limit_reached_armbottom = 1;
+            if (armtop.getCurrentPosition() > 280) {
+                limit_reached_armtop = 1;
+            } else {
+                limit_reached_armtop = 0;
+            }
         } else {
             limit_reached_armbottom = 0;
+            limit_reached_armtop = 0;
         }
 //        if (armtop.getCurrentPosition() > 280) {
 //            limit_reached_armtop = 1;
