@@ -52,6 +52,7 @@ public class Main extends LinearOpMode {
         motorRF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armtop.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armbottom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Reset encoders.
         MOTORS_STOP_AND_RESET_ENCODERS();
