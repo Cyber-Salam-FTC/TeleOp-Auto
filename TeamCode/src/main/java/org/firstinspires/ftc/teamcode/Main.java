@@ -19,6 +19,7 @@ public class Main extends LinearOpMode {
     private DcMotor motorRF;
     private Servo servoclaw;
     public Servo clawservo;
+    public Servo wedge;
 
     int limit_reached_armtop = 0;
     int limit_reached_armbottom = 0;
@@ -44,6 +45,7 @@ public class Main extends LinearOpMode {
         servoclaw = hardwareMap.get(Servo.class, "servoclaw");
         clawservo = hardwareMap.get(Servo.class, "clawservo");
         intake = hardwareMap.get(DcMotor.class, "intake");
+        wedge = hardwareMap.get(Servo.class, "Wedge");
 
         // Makes robot brake when controller isn't giving any input.
         moterLB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -149,12 +151,21 @@ public class Main extends LinearOpMode {
                     motorRF.setPower(0);
                 }
 
+                if (gamepad2.a){
+                    wedge.setPosition(180);
+                }
+
+                if (gamepad2.b) {
+                    wedge.setPosition(360);
+                }
+
                 if (gamepad2.right_bumper) {
                     CLAW_OPEN();
                 }
                 if (gamepad2.left_bumper) {
                     CLAW_CLOSE();
                 }
+
 
 //                // PS/Home button: Reset robot configuration
 //                if (gamepad2.ps) {
