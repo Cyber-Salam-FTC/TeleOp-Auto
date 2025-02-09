@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+
+
 @TeleOp(name = "CyberSalam - TeleOp")
 
 public class Main extends LinearOpMode {
@@ -18,8 +20,7 @@ public class Main extends LinearOpMode {
     private DcMotor motorRB;
     private DcMotor motorRF;
     private Servo servoclaw;
-    public Servo clawservo;
-    public Servo wedge;
+    public CRServo wedge;
 
     int limit_reached_armtop = 0;
     int limit_reached_armbottom = 0;
@@ -27,6 +28,7 @@ public class Main extends LinearOpMode {
     double fIntake = 0;
     float fArmTop = 0;
     float bPower = 0;
+    float switch1 = 0;
     double fPower = 0;
     double sPower = 0;
     double dPower = 0;
@@ -43,9 +45,9 @@ public class Main extends LinearOpMode {
         armtop = hardwareMap.get(DcMotor.class, "armtop");
         armbottom = hardwareMap.get(DcMotor.class, "armbottom");
         servoclaw = hardwareMap.get(Servo.class, "servoclaw");
-        clawservo = hardwareMap.get(Servo.class, "clawservo");
+        wedge = hardwareMap.get(CRServo.class, "wedge");
         intake = hardwareMap.get(DcMotor.class, "intake");
-        wedge = hardwareMap.get(Servo.class, "Wedge");
+//        wedge = hardwareMap.get(Servo.class, "wedge");
 
         // Makes robot brake when controller isn't giving any input.
         moterLB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -69,25 +71,60 @@ public class Main extends LinearOpMode {
         waitForStart();
         if (opModeIsActive()) {
             while (opModeIsActive()) {
-                // Put loop blocks here.
+
                 if (0 < gamepad2.left_stick_y) {
-                    fIntake = -(gamepad2.left_stick_y) * 0.25;
+                    fIntake = -(gamepad2.left_stick_y) * 0.5;
                     intake.setPower(fIntake);
                 } else if (0 > gamepad2.left_stick_y) {
-                    fIntake = -(gamepad2.left_stick_y) * 0.25;
+                    fIntake = -(gamepad2.left_stick_y) * 0.5;
                     intake.setPower(fIntake);
                 } else if (0 == gamepad2.left_stick_y) {
                     fIntake = 0;
                     intake.setPower(fIntake);
                 }
 
-                if (gamepad2.dpad_up){
-                    INTAKE_OPEN();
+                if (gamepad2.a) {
+                    wedge.setPower(-1);
+                } else if (gamepad2.b){
+                    wedge.setPower(1);
+                } else {
+                    wedge.setPower(0);
                 }
 
-                if (gamepad2.dpad_down){
-                    INTAKE_CLOSE();
-                }
+//                if (gamepad2.b) {
+//                    switch1 = 1;
+//                }
+//
+//                if (gamepad2.a){
+//                    switch1 = 2;
+//                }
+//
+//                if (switch1 == 1) {
+//                    wedge.
+//                }
+//
+//                if (switch1 == 2) {
+//                    if (gamepad2.left_stick_x > 0){
+//                        wedge.setPower(0.3);
+//                    } else if (gamepad2.left_stick_x < 0) {
+//                        wedge.setPower(-0.3);
+//                    } else if (gamepad2.left_stick_x == 0) {
+//                        wedge.setPower(0);
+//                    }
+//                }
+
+
+
+                // Put loop blocks here.
+
+
+//                if (gamepad2.dpad_up){
+//                    INTAKE_OPEN();
+//                }
+//
+//                if (gamepad2.dpad_down){
+//                    INTAKE_CLOSE();
+//                }
 
                 SOFTWARE_LIMIT();
 
@@ -151,13 +188,6 @@ public class Main extends LinearOpMode {
                     motorRF.setPower(0);
                 }
 
-                if (gamepad2.a){
-                    wedge.setPosition(180);
-                }
-
-                if (gamepad2.b) {
-                    wedge.setPosition(360);
-                }
 
                 if (gamepad2.right_bumper) {
                     CLAW_OPEN();
@@ -165,6 +195,8 @@ public class Main extends LinearOpMode {
                 if (gamepad2.left_bumper) {
                     CLAW_CLOSE();
                 }
+
+
 
 
 //                // PS/Home button: Reset robot configuration
@@ -256,8 +288,10 @@ public class Main extends LinearOpMode {
                 telemetry.addData("Intake", fIntake);
                 telemetry.addData("Claw", servoclaw.getPosition());
                 telemetry.addData("gamepad2.right_trigger", gamepad2.right_trigger);
-                telemetry.addData("Intake Claw", clawservo.getPosition());
+//                telemetry.addData("Intake Claw", wedge.getPosition());
                 telemetry.addData("armbottom_zeroPower", armbottom.getZeroPowerBehavior());
+                telemetry.addData("wedgePower", wedge.getPower());
+                telemetry.addData("left_stick_x", gamepad2.left_stick_x);
                 telemetry.addData("armtop_zeroPower", armtop.getZeroPowerBehavior());
                 telemetry.update();
             }
@@ -326,11 +360,11 @@ public class Main extends LinearOpMode {
         servoclaw.setDirection(Servo.Direction.REVERSE);
         servoclaw.setPosition(0.15);
     }
-
-    private void INTAKE_OPEN() {
-//        clawservo.setDirection(Servo.Direction.REVERSE);
-        clawservo.setPosition(0.4);
-    }
+//
+//    private void INTAKE_OPEN() {
+////        wedge.setDirection(Servo.Direction.REVERSE);
+//        wedge.setPosition(0.4);
+//    }
 
     /**
      * Describe this function...
@@ -340,8 +374,8 @@ public class Main extends LinearOpMode {
         servoclaw.setPosition(0);
     }
 
-    private void INTAKE_CLOSE() {
-//        clawservo.setDirection(Servo.Direction.REVERSE);
-        clawservo.setPosition(0);
-    }
+//    private void INTAKE_CLOSE() {
+////        wedge.setDirection(Servo.Direction.REVERSE);
+//        wedge.setPosition(0);
+//    }
 }
