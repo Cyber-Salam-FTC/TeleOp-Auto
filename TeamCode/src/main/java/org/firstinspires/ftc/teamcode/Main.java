@@ -71,7 +71,11 @@ public class Main extends LinearOpMode {
         waitForStart();
         if (opModeIsActive()) {
             while (opModeIsActive()) {
+<<<<<<< HEAD
 //                Example to diagonally turn
+=======
+
+>>>>>>> 814fb3021175d689774fa9fe176076e1f8626d97
                 if (0 < gamepad2.left_stick_y) {
                     fIntake = -(gamepad2.left_stick_y) * 0.5;
                     intake.setPower(fIntake);
@@ -84,9 +88,15 @@ public class Main extends LinearOpMode {
                 }
 
                 if (gamepad2.a) {
+<<<<<<< HEAD
                     wedge.setPower(1);
                 } else if (gamepad2.b){
                     wedge.setPower(-1);
+=======
+                    wedge.setPower(-1);
+                } else if (gamepad2.b){
+                    wedge.setPower(1);
+>>>>>>> 814fb3021175d689774fa9fe176076e1f8626d97
                 } else {
                     wedge.setPower(0);
                 }
@@ -151,8 +161,47 @@ public class Main extends LinearOpMode {
                     ultraPower = 0;
                 }
 
+<<<<<<< HEAD
 
 
+=======
+                if (0 != gamepad1.left_trigger) {
+                    // Back Code
+                    bPower = gamepad1.left_trigger;
+                    moterLB.setPower(bPower);
+                    motorLF.setPower(bPower);
+                    motorRB.setPower(-bPower);
+                    motorRF.setPower(-bPower);
+                } else if (0 != gamepad1.right_trigger) {
+                    // Front Code
+                    fPower = -(gamepad1.right_trigger * 0.8);
+                    moterLB.setPower(fPower);
+                    motorLF.setPower(fPower);
+                    motorRB.setPower(-fPower);
+                    motorRF.setPower(-fPower);
+                } else if (0 != gamepad1.right_stick_x) {
+                    // Start diagonal movement (shifting)
+                    sPower = -(gamepad1.right_stick_x * 0.8);
+                    moterLB.setPower(-sPower);
+                    motorLF.setPower(sPower);
+                    motorRB.setPower(-sPower);
+                    motorRF.setPower(sPower);
+                } else if (0 != gamepad1.left_stick_x) {
+                    // Start diagonal movement (shifting)
+                    dPower = -(gamepad1.left_stick_x * 0.8);
+                    moterLB.setPower(dPower);
+                    motorLF.setPower(dPower);
+                    motorRB.setPower(dPower);
+                    motorRF.setPower(dPower);
+                } else {
+                    // Back Code
+                    bPower = 0;
+                    moterLB.setPower(0);
+                    motorLF.setPower(0);
+                    motorRB.setPower(0);
+                    motorRF.setPower(0);
+                }
+>>>>>>> 814fb3021175d689774fa9fe176076e1f8626d97
 
 
                 if (gamepad2.right_bumper) {
