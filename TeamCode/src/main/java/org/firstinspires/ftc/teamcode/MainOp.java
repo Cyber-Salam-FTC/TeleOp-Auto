@@ -27,7 +27,7 @@ public class MainOp extends OpMode {
         strafe = -(gamepad1.left_stick_y);
         rotate = gamepad1.right_stick_x;
 
-        hardware.driveFieldRelative(forward, strafe, rotate);
+//        hardware.driveFieldRelative(forward, strafe, rotate);
 
     }
 
