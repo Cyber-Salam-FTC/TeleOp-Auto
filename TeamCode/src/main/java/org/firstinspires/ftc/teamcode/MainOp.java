@@ -25,7 +25,7 @@ public class MainOp extends OpMode {
     public void loop() {
 
 
-        switch {
+        switch (){
             
         }
     }
