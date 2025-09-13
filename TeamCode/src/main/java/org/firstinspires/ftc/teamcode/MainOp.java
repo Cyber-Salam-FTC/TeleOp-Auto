@@ -10,9 +10,9 @@ public class MainOp extends OpMode {
 
     RobotHardware hardware = new RobotHardware();
 
-    private enum state {
-        WAIT_FOR_RIGHT_TRIGGER
-    }
+    double forward, strafe, rotate;
+
+    double controllerState;
 
 
 
@@ -23,11 +23,14 @@ public class MainOp extends OpMode {
 
     @Override
     public void loop() {
+        forward = -(gamepad1.left_stick_x);
+        strafe = -(gamepad1.left_stick_y);
+        rotate = gamepad1.right_stick_x;
 
+        hardware.driveFieldRelative(forward, strafe, rotate);
 
-        switch {
-            
-        }
     }
+
+
 
 }
