@@ -55,5 +55,42 @@ public class RobotHardware {
     public void rightRearSpeed(double speed) {
         rightRear.setPower(speed);
     }
+ public void setMotorPowerBasedOnDirection(int DirectionCase){
+    switch(DirectionCase) {
+        //Turn right+forward.
+        case 1:
+            leftFront.setPower(1);
+            rightFront.setPower(0.5);
+            leftRear.setPower(1);
+            rightRear.setPower(0.5);
+            break;
+        //turn left+forward
+        case 2:
+            leftFront.setPower(0.5);
+            rightFront.setPower(1);
+            leftRear.setPower(0.5);
+            rightRear.setPower(1);
+            break;
+        //turn right+backward
+        case 3:
+            leftFront.setPower(-1);
+            rightFront.setPower(-0.5);
+            leftRear.setPower(-1);
+            rightRear.setPower(-0.5);
+            break;
+        //turn left+backward
+        case 4:
+            leftFront.setPower(-0.5);
+            rightFront.setPower(-1);
+            leftRear.setPower(-0.5);
+            rightRear.setPower(-1);
+            break;
+        default:
+            leftFront.setPower(1);
+            rightFront.setPower(1);
+            leftRear.setPower(1);
+            rightRear.setPower(1);
+    }
 
+    }
 }
