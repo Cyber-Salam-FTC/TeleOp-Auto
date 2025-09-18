@@ -1,22 +1,24 @@
 package org.firstinspires.ftc.teamcode.pedropathing;
 
-import com.pedropathing.Drivetrain;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.ftc.FollowerBuilder;
-import com.pedropathing.ftc.drivetrains.MecanumConstants;
-import com.pedropathing.ftc.localization.constants.PinpointConstants;
 import com.pedropathing.paths.PathConstraints;
+<<<<<<< HEAD
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+=======
+import com.qualcomm.robotcore.hardware.HardwareMap;
+>>>>>>> 297db9c3e0fd1820e087952053f3ac4337909ac3
 
 public class Constants {
     public static FollowerConstants followerConstants = new FollowerConstants();
 
     public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
 
+<<<<<<< HEAD
     public static PinpointConstants localizerConstants = new PinpointConstants()
             .forwardPodY(5)
             .strafePodX(5)
@@ -42,6 +44,11 @@ public class Constants {
                 .pathConstraints(pathConstraints)
                 .pinpointLocalizer(localizerConstants)
                 .mecanumDrivetrain(drivetrain)
+=======
+    public static Follower createFollower(HardwareMap hardwareMap) {
+        return new FollowerBuilder(followerConstants, hardwareMap)
+                .pathConstraints(pathConstraints)
+>>>>>>> 297db9c3e0fd1820e087952053f3ac4337909ac3
                 .build();
     }
 }
