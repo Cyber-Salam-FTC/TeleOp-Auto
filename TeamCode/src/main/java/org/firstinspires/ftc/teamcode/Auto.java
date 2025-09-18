@@ -23,7 +23,7 @@ public class Auto extends OpMode {
 
 
 
-        Pose startPose = new Pose(0, 0, 0);
+        Pose startPose = new Pose(0, 48, 0);
 
         // Pass the hardware map to the createFollower method
 
@@ -33,14 +33,12 @@ public class Auto extends OpMode {
         follower.setStartingPose(startPose);
 
 //        Pose start = new Pose(0, 0, 0);
-        Pose middle = new Pose(0, 10, 0);
+        Pose middle = new Pose(0, 0, 0);
         Pose end = new Pose(0, 0, 0);
 
         path = follower.pathBuilder()
                 .addPath(new BezierLine(startPose, middle))
                 .setLinearHeadingInterpolation(startPose.getHeading(), middle.getHeading())
-                .addPath(new BezierLine(middle, end))
-                .setLinearHeadingInterpolation(middle.getHeading(), end.getHeading())
                 .build();
     }
 
