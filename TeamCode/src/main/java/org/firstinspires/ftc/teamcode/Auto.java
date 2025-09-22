@@ -36,11 +36,6 @@ public class Auto extends OpMode {
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
         // Pass the hardware map to the createFollower method
         follower = Constants.createFollower(hardwareMap);
         if (follower == null || follower.getDrivetrain() == null) {
@@ -54,7 +49,6 @@ public class Auto extends OpMode {
 
         path = follower.pathBuilder()
                 .addPath(new BezierLine(start, end))
-                .setLinearHeadingInterpolation(start.getHeading(), end.getHeading())
                 .build();
         follower.followPath(path);
 
