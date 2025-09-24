@@ -50,10 +50,6 @@
                 rightFront = hardwareMap.get(DcMotor.class, "rightFront");
                 rightRear = hardwareMap.get(DcMotor.class, "rightRear");
 
-                // You might need to reverse one side of the motors so your robot drives straight.
-                // For example, if the right side motors spin the wrong way, you can uncomment these lines:
-                // rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-                // rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
 
             } catch (Exception e) {
                 // This will tell you if there's a hardware configuration error!
