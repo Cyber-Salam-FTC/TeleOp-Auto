@@ -2,11 +2,12 @@
 
     import androidx.annotation.NonNull;
 
+    import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
     import com.qualcomm.robotcore.eventloop.opmode.OpMode;
     import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
     import com.qualcomm.robotcore.hardware.DcMotor;
-    import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+    import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
     import org.firstinspires.ftc.teamcode.cybersalam.hardware.MecanumDrive;
     import org.firstinspires.ftc.teamcode.cybersalam.hardware.RobotHardware;
 
@@ -18,6 +19,7 @@
         private DcMotor leftRear;
         private DcMotor rightFront;
         private DcMotor rightRear;
+//        private GoBildaPinpointDriver pinpoint;
 
         private enum RobotState {
             RIGHT_AND_FORWARD,
@@ -50,6 +52,8 @@
                 rightFront = hardwareMap.get(DcMotor.class, "rightFront");
                 rightRear = hardwareMap.get(DcMotor.class, "rightRear");
 
+//                pinpoints = hardwareMap.get(GoBildaPinpointDriver.class, "pinpointComputer");
+//                pinpoint = new GoBildaPinpointDriver(hardwareMap, "pinpointComputer");
 
             } catch (Exception e) {
                 // This will tell you if there's a hardware configuration error!
@@ -60,6 +64,7 @@
 
         @Override
         public void loop() {
+//            pinpoint.update();
 
             forward = gamepad1.right_trigger - gamepad1.left_trigger;
             strafe = gamepad1.left_stick_x;

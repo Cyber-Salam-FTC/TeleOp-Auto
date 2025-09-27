@@ -24,7 +24,7 @@ public class Auto extends OpMode {
     private Follower follower;
     private int pathState;
     private final Pose startPose = new Pose(72,0,Math.toRadians(90));
-    private final Pose endPose = new Pose(72,48,Math.toRadians(90));
+    private final Pose endPose = new Pose(72,3,Math.toRadians(90));
     private Path move;
 
     private DcMotor leftFront, leftRear, rightFront, rightRear;
@@ -45,6 +45,11 @@ public class Auto extends OpMode {
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
         telemetry.update();
+
+        if (!follower.isBusy()) {
+            pathState = 1;
+            requestOpModeStop();
+        }
     }
 
     @Override
@@ -54,11 +59,6 @@ public class Auto extends OpMode {
         rightFront = hardwareMap.get(DcMotor.class, "rightFront");
         rightRear = hardwareMap.get(DcMotor.class, "rightRear");
 
-        telemetry.addData("path state", pathState);
-        telemetry.addData("x", follower.getPose().getX());
-        telemetry.addData("y", follower.getPose().getY());
-        telemetry.addData("heading", follower.getPose().getHeading());
-        telemetry.update();
 
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
