@@ -43,7 +43,7 @@ public class Auto extends OpMode {
         telemetry.addData("path state", pathState);
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
-        telemetry.addData("heading", follower.getPose().getHeading());
+        telemetry.addData("heading", follower.getPose().getHeading()*(Math.PI));
         telemetry.update();
 
         if (!follower.isBusy()) {

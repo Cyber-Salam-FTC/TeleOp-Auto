@@ -75,9 +75,8 @@ public class Constants {
             .strafePodX(7.0)
             .distanceUnit(DistanceUnit.INCH)
             .hardwareMapName("pinpointComputer")
-            .customEncoderResolution(609.11)
             .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
-            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
+            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
     public static MecanumConstants drivetrain = new MecanumConstants()
