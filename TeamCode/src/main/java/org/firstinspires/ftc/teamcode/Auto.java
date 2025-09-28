@@ -1,25 +1,56 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.pedropathing.Tuning.drawCurrent;
+import static org.firstinspires.ftc.teamcode.pedropathing.Tuning.drawCurrentAndHistory;
+import static org.firstinspires.ftc.teamcode.pedropathing.Tuning.follower;
+
+import com.bylazar.configurables.annotations.IgnoreConfigurable;
+import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
+import com.pedropathing.util.PoseHistory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 
-@Autonomous(name = "Auto Testing Cyber Salam FTC")
+@Autonomous(name = "Auto - Cyber Salam FTC | 26903")
 public class Auto extends OpMode {
-
-    private DcMotor leftFront;
-    private DcMotor leftRear;
-    private DcMotor rightFront;
-    private DcMotor rightRear;
-
     private Follower follower;
-    private PathChain path;
+    private int pathState;
+    private final Pose startPose = new Pose(72,0,Math.toRadians(90));
+    private final Pose endPose = new Pose(72,3,Math.toRadians(90));
+    private Path move;
+
+    private DcMotor leftFront, leftRear, rightFront, rightRear;
+
+
+    public void buildPaths() {
+        move = new Path(new BezierLine(startPose, endPose));
+        move.setLinearHeadingInterpolation(startPose.getHeading(), endPose.getHeading());
+        follower.followPath(move);
+    }
+
+
+    @Override
+    public void loop() {
+        follower.update();
+        telemetry.addData("path state", pathState);
+        telemetry.addData("x", follower.getPose().getX());
+        telemetry.addData("y", follower.getPose().getY());
+        telemetry.addData("heading", follower.getPose().getHeading()*(Math.PI));
+        telemetry.update();
+
+        if (!follower.isBusy()) {
+            pathState = 1;
+            requestOpModeStop();
+        }
+    }
 
     @Override
     public void init() {
@@ -28,35 +59,25 @@ public class Auto extends OpMode {
         rightFront = hardwareMap.get(DcMotor.class, "rightFront");
         rightRear = hardwareMap.get(DcMotor.class, "rightRear");
 
-        leftFront.setDirection(DcMotor.Direction.REVERSE);
-        leftRear.setDirection(DcMotor.Direction.REVERSE);
 
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        // Pass the hardware map to the createFollower method
         follower = Constants.createFollower(hardwareMap);
-        if (follower == null || follower.getDrivetrain() == null) {
-            telemetry.addLine("Follower or Drivetrain not initialized!");
-            telemetry.update();
-            return;
-        }
+        buildPaths();
+        follower.setStartingPose(startPose);
 
-        Pose start = new Pose(0, 0, 0);
-        Pose end = new Pose(0, 48, 0);
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
 
-        path = follower.pathBuilder()
-                .addPath(new BezierLine(start, end))
-                .build();
-        follower.followPath(path);
+    @Override
+    public void init_loop() {}
 
+    @Override
+    public void start() {
 
     }
 
     @Override
-    public void loop() {
-        follower.update();
-    }
+    public void stop() {}
 }
