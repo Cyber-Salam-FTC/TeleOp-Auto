@@ -1,21 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.pedropathing.Tuning.drawCurrent;
-import static org.firstinspires.ftc.teamcode.pedropathing.Tuning.drawCurrentAndHistory;
-import static org.firstinspires.ftc.teamcode.pedropathing.Tuning.follower;
-
-import com.bylazar.configurables.annotations.IgnoreConfigurable;
-import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
-import com.pedropathing.util.PoseHistory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 
@@ -24,22 +16,21 @@ public class Auto extends OpMode {
     private Follower follower;
     private int pathState;
     private Path path1, path2, path3, path4, path5, path6, path7, path8, path9;
+    private PathChain fullPath;
 
     private DcMotor leftFront, leftRear, rightFront, rightRear;
 
 
-// Poses
-
-    private final Pose startPose = new Pose(96, 9, 90);
-    private final Pose Pose2 = new Pose(96, 96, 45);
-    private final Pose Pose3 = new Pose(110, 83.5, 0);
-    private final Pose Pose4 = new Pose(115, 83.5, 0);
-    private final Pose Pose5 = new Pose(120, 83.5, 0);
-    private final Pose Pose6 = new Pose(96, 96, 45);
-    private final Pose Pose7 = new Pose(35, 83.5, 180);
-    private final Pose Pose8 = new Pose(29, 83.5, 180);
-    private final Pose Pose9 = new Pose(24, 83.5, 180);
-    private final Pose Pose10 = new Pose(96, 96, 45);
+    private final Pose startPose = new Pose(96, 9, Math.toRadians(90));
+    private final Pose Pose2 = new Pose(96, 96, Math.toRadians(45));
+    private final Pose Pose3 = new Pose(110, 83.5, Math.toRadians(0));
+    private final Pose Pose4 = new Pose(115, 83.5, Math.toRadians(0));
+    private final Pose Pose5 = new Pose(120, 83.5, Math.toRadians(0));
+    private final Pose Pose6 = new Pose(96, 96, Math.toRadians(45));
+    private final Pose Pose7 = new Pose(35, 83.5, Math.toRadians(180));
+    private final Pose Pose8 = new Pose(29, 83.5, Math.toRadians(180));
+    private final Pose Pose9 = new Pose(24, 83.5, Math.toRadians(180));
+    private final Pose Pose10 = new Pose(96, 96, Math.toRadians(45));
 
     public void buildPaths() {
         path1 = new Path(new BezierLine(startPose, Pose2));
@@ -67,7 +58,9 @@ public class Auto extends OpMode {
         path8.setLinearHeadingInterpolation(Pose8.getHeading(), Pose9.getHeading());
 
         path9 = new Path(new BezierLine(Pose9, Pose10));
-        path3.setLinearHeadingInterpolation(Pose9.getHeading(), Pose10.getHeading());
+        path9.setLinearHeadingInterpolation(Pose9.getHeading(), Pose10.getHeading());
+
+        fullPath = new PathChain(path1, path2, path3, path4, path5, path6, path7, path8, path9);
     }
 
 
@@ -77,7 +70,7 @@ public class Auto extends OpMode {
         telemetry.addData("path state", pathState);
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
-        telemetry.addData("heading", follower.getPose().getHeading()*(Math.PI));
+        telemetry.addData("heading (deg)", Math.toDegrees(follower.getPose().getHeading()));
         telemetry.update();
 
         if (!follower.isBusy()) {
@@ -92,7 +85,6 @@ public class Auto extends OpMode {
         leftRear = hardwareMap.get(DcMotor.class, "leftRear");
         rightFront = hardwareMap.get(DcMotor.class, "rightFront");
         rightRear = hardwareMap.get(DcMotor.class, "rightRear");
-
 
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
@@ -109,7 +101,7 @@ public class Auto extends OpMode {
 
     @Override
     public void start() {
-
+        follower.followPath(fullPath);
     }
 
     @Override
