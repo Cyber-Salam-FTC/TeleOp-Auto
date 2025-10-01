@@ -1,11 +1,7 @@
-// File: org.firstinspires.ftc.teamcode.cybersalam.hardware.MecanumDrive.java
-
 package org.firstinspires.ftc.teamcode.cybersalam.hardware;
 
-import com.qualcomm.hardware.bosch.BNO055IMU; // Import the BNO055IMU class
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class MecanumDrive {
@@ -14,39 +10,14 @@ public class MecanumDrive {
     private DcMotor leftRear;
     private DcMotor rightFront;
     private DcMotor rightRear;
-    private BNO055IMU imu;
+    // Removed IMU as it's cleaner to handle it in RobotHardware or pass it in if needed
 
-    public void init(HardwareMap hwMap) {
-        leftFront = hwMap.get(DcMotor.class, "leftFront");
-        leftRear = hwMap.get(DcMotor.class, "leftRear");
-        rightFront = hwMap.get(DcMotor.class, "rightFront");
-        rightRear = hwMap.get(DcMotor.class, "rightRear");
-
-        leftFront.setDirection(DcMotor.Direction.REVERSE);
-        leftRear.setDirection(DcMotor.Direction.REVERSE);
-
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        // Get the BNO055IMU instead of the generic IMU interface.
-        imu = hwMap.get(BNO055IMU.class, "imu");
-
-        // The BNO055IMU requires a different parameter object.
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
-
-        imu.initialize(parameters);
-    }
-
-    public BNO055IMU getIMU() {
-        return imu;
+    // Initialize with the motors from RobotHardware
+    public void init(DcMotor leftFront, DcMotor leftRear, DcMotor rightFront, DcMotor rightRear) {
+        this.leftFront = leftFront;
+        this.leftRear = leftRear;
+        this.rightFront = rightFront;
+        this.rightRear = rightRear;
     }
 
     public void drive(double forward, double strafe, double rotate) {
@@ -63,25 +34,28 @@ public class MecanumDrive {
         maxPower = Math.max(maxPower, Math.abs(rightFrontPower));
         maxPower = Math.max(maxPower, Math.abs(rightRearPower));
 
-        leftFront.setPower(maxSpeed * (leftFrontPower / maxPower));
-        leftRear.setPower(maxSpeed * (leftRearPower / maxPower));
-        rightFront.setPower(maxSpeed * (rightFrontPower / maxPower));
-        rightRear.setPower(maxSpeed * (rightRearPower / maxPower));
+        // Power scaling
+        double scale = maxSpeed / maxPower;
+
+        leftFront.setPower(leftFrontPower * scale);
+        leftRear.setPower(leftRearPower * scale);
+        rightFront.setPower(rightFrontPower * scale);
+        rightRear.setPower(rightRearPower * scale);
     }
 
-    // You can't use getRobotYawPitchRollAngles() with BNO055IMU.
-    // You must use imu.getAngularOrientation() instead.
-    public void driveFieldRelative(double forward, double strafe, double rotate) {
+    // driveFieldRelative requires an IMU object to be passed in or stored.
+    // I'm keeping the method simple for now, but you'll need the IMU for this.
+    /*
+    public void driveFieldRelative(double forward, double strafe, double rotate, double robotHeadingRadians) {
         double theta = Math.atan2(forward, strafe);
         double r = Math.hypot(strafe, forward);
 
-        // Use imu.getAngularOrientation() for BNO055IMU.
-        theta = AngleUnit.normalizeRadians(theta -
-                imu.getAngularOrientation().firstAngle);
+        theta = AngleUnit.normalizeRadians(theta - robotHeadingRadians);
 
         double newForward = r * Math.sin(theta);
         double newStrafe = r * Math.cos(theta);
 
         this.drive(newForward, newStrafe, rotate);
     }
+    */
 }

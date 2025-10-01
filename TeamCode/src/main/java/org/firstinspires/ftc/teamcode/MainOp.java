@@ -36,13 +36,11 @@
         @Override
         public void init() {
     //        MecanumDrive init
-            drive.init(hardwareMap);
 
 
 
 
             // This is a good place to put hardware-specific logic.
-            hardware.init(hardwareMap);
 
             // It is a good practice to also get motor objects directly
             // to make sure they are properly mapped.

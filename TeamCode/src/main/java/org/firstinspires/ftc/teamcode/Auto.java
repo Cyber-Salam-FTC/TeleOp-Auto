@@ -23,17 +23,17 @@ import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 public class Auto extends OpMode {
     private Follower follower;
     private int pathState;
-    private final Pose startPose = new Pose(72,0,Math.toRadians(90));
-    private final Pose endPose = new Pose(72,3,Math.toRadians(90));
     private Path move;
 
     private DcMotor leftFront, leftRear, rightFront, rightRear;
 
 
+// Poses
+
+    private final Pose startPose = new Pose();
+
     public void buildPaths() {
-        move = new Path(new BezierLine(startPose, endPose));
-        move.setLinearHeadingInterpolation(startPose.getHeading(), endPose.getHeading());
-        follower.followPath(move);
+
     }
 
 
