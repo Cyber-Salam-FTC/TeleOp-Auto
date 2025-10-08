@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 public class AdeelRotationTest extends OpMode {
 
     public static Follower follower;
-    public static PathChain path;
+    private PathChain path;
 /*
     public static double DISTANCE = 40;
     private boolean forward = true;
