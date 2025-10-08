@@ -126,9 +126,18 @@ public class Auto extends OpMode {
 
     @Override
     public void start() {
+        Path forwards, backwards;
+        double DISTANCE = 40;
+        follower.activateAllPIDFs();
+        forwards = new Path(new BezierLine(new Pose(0,0), new Pose(DISTANCE,0)));
+        forwards.setConstantHeadingInterpolation(0);
+        backwards = new Path(new BezierLine(new Pose(DISTANCE,0), new Pose(0,0)));
+        backwards.setConstantHeadingInterpolation(0);
+        follower.followPath(forwards);
+
         // Now fullPath is guaranteed to be initialized
-        follower.followPath(fullPath);
-        pathState = 0; // Set state to track the main path
+//        follower.followPath(fullPath);
+//        pathState = 0; // Set state to track the main path
     }
 
     @Override
