@@ -102,7 +102,7 @@ public class AdeelRotationTest extends OpMode {
     @Override
     public void loop() {
         follower.update();
-        drawCurrentAndHistory();
+//        drawCurrentAndHistory();
 
         if (follower.atParametricEnd()) {
             follower.followPath(path);
