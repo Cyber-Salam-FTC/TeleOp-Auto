@@ -18,6 +18,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 
+import java.text.BreakIterator;
+
 @Autonomous(name = "AdeelRotationTest")
 
 public class AdeelRotationTest extends OpMode {
@@ -25,12 +27,13 @@ public class AdeelRotationTest extends OpMode {
     public static Follower follower;
     private final Pose startPose = new Pose (0, 0, 0);
     private final Pose endPose = new Pose (24, 24, Math.PI);
-    private PathChain path;
+//    private PathChain pathChain;
+    private Path path;
+    private Path forwards;
+    private Path backwards;
 /*
     public static double DISTANCE = 40;
     private boolean forward = true;
-    private Path forwards;
-    private Path backwards;
 */
 
 
@@ -71,12 +74,23 @@ public class AdeelRotationTest extends OpMode {
         //        follower.deactivateAllPIDFs();
         follower.activateHeading();
 
-        path = follower.pathBuilder()
-                .addPath(new BezierLine(startPose, endPose))
-                .setLinearHeadingInterpolation(startPose.getHeading(), endPose.getHeading(), 1)
-                .addPath(new BezierLine(endPose, startPose))
-                .setLinearHeadingInterpolation(endPose.getHeading(), startPose.getHeading(), 1)
+        forwards = new Path(new BezierLine(startPose, endPose));
+        forwards.setLinearHeadingInterpolation(startPose.getHeading(), endPose.getHeading());
+
+        backwards = new Path(new BezierLine(endPose, startPose));
+        backwards.setLinearHeadingInterpolation(endPose.getHeading(), startPose.getHeading());
+
+        follower.pathBuilder()
+                .addPath(forwards)
+                .addPath(backwards)
                 .build();
+
+//        pathChain = follower.pathBuilder()
+//                .addPath(new BezierLine(startPose, endPose))
+//                .setLinearHeadingInterpolation(startPose.getHeading(), endPose.getHeading(), 1)
+//                .addPath(new BezierLine(endPose, startPose))
+//                .setLinearHeadingInterpolation(endPose.getHeading(), startPose.getHeading(), 1)
+//                .build();
 
 //        backwards = new Path(new BezierLine(endPose, startPose));
 //        backwards.setLinearHeadingInterpolation(endPose.getHeading(), startPose.getHeading());
@@ -88,11 +102,8 @@ public class AdeelRotationTest extends OpMode {
 //                .setLinearHeadingInterpolation(pickup1Pose.getHeading(), scorePose.getHeading())
 //                .build();
 
-        follower.followPath(path);
-
 
     }
-
 
 
     /**
@@ -101,13 +112,17 @@ public class AdeelRotationTest extends OpMode {
      */
     @Override
     public void loop() {
+        follower.followPath(forwards);
         follower.update();
+        follower.followPath(backwards);
+        follower.update();
+
+        telemetry.update();
 //        drawCurrentAndHistory();
 
-        if (follower.atParametricEnd()) {
-            follower.followPath(path);
-        }
-        telemetry.update();
+//        if (follower.atParametricEnd()) {
+//            follower.followPath(path);
+//        }
     }
 }
 
