@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.pedropathing.Tuning.follower;
+
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.follower.Follower;
@@ -108,6 +110,8 @@ public class Auto extends OpMode {
         rightRear = hardwareMap.get(DcMotor.class, "rightRear");
 
         follower = Constants.createFollower(hardwareMap);
+        follower.deactivateAllPIDFs();
+        follower.activateHeading();
         buildPaths(); // Initialize paths, including fullPath
         follower.setStartingPose(startPose);
 
