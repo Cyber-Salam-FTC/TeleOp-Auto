@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp
 public class ServoExamples extends OpMode {
-    org.firstinspires.ftc.teamcode.Mechanisms.servo servo = new org.firstinspires.ftc.teamcode.Mechanisms.servo();
+    org.firstinspires.ftc.teamcode.testing.Mechanisms.servo servo = new org.firstinspires.ftc.teamcode.testing.Mechanisms.servo();
     double leftTrigger, rightTrigger;
 
     @Override
