@@ -23,6 +23,7 @@ import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 public class AdeelRotationTest extends OpMode {
 
     public static Follower follower;
+    public static PathChain path;
 /*
     public static double DISTANCE = 40;
     private boolean forward = true;
@@ -70,7 +71,7 @@ public class AdeelRotationTest extends OpMode {
         //        follower.deactivateAllPIDFs();
         follower.activateHeading();
 
-        PathChain path = follower.pathBuilder()
+        path = follower.pathBuilder()
                 .addPath(new BezierLine(startPose, endPose))
                 .setLinearHeadingInterpolation(startPose.getHeading(), endPose.getHeading(), 1)
                 .addPath(new BezierLine(endPose, startPose))
@@ -104,7 +105,7 @@ public class AdeelRotationTest extends OpMode {
         drawCurrentAndHistory();
 
         if (follower.atParametricEnd()) {
-            follower.followPath(triangle, true);
+            follower.followPath(path);
         }
         telemetry.update();
     }
