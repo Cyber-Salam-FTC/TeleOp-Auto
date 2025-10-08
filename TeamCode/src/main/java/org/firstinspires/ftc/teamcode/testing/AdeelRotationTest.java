@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 public class AdeelRotationTest extends OpMode {
 
     public static Follower follower;
-    private final Pose startPose = new Pose (0, 0, Math.PI);
-    private final Pose endPose = new Pose (24, 24, 0);
+    private final Pose startPose = new Pose (0, 0, 0);
+    private final Pose endPose = new Pose (24, 24, Math.PI);
     private PathChain path;
 /*
     public static double DISTANCE = 40;
