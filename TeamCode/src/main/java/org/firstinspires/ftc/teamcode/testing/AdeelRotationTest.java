@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.testing;
 
 import static org.firstinspires.ftc.teamcode.pedropathing.Tuning.drawCurrent;
 import static org.firstinspires.ftc.teamcode.pedropathing.Tuning.drawCurrentAndHistory;
@@ -23,6 +23,8 @@ import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 public class AdeelRotationTest extends OpMode {
 
     public static Follower follower;
+    private final Pose startPose = new Pose (0, 0, Math.PI);
+    private final Pose endPose = new Pose (24, 24, 0);
     private PathChain path;
 /*
     public static double DISTANCE = 40;
@@ -66,8 +68,6 @@ public class AdeelRotationTest extends OpMode {
     @Override
     public void start() {
 
-        Pose startPose = new Pose (0, 0, Math.PI);
-        Pose endPose = new Pose (24, 24, 0);
         //        follower.deactivateAllPIDFs();
         follower.activateHeading();
 
