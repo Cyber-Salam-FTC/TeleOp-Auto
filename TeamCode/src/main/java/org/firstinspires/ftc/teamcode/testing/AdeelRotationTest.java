@@ -64,7 +64,7 @@ public class AdeelRotationTest extends OpMode {
 //        telemetry.debug("The robot will try to stay at a constant heading while you try to turn it.");
 //        telemetry.debug("You can adjust the PIDF values to tune the robot's heading PIDF(s).");
         telemetry.update();
-        follower.update();
+//        follower.update();
 //            drawCurrent();
     }
 
