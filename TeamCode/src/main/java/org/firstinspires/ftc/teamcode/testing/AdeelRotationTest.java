@@ -80,6 +80,9 @@ public class AdeelRotationTest extends OpMode {
         backwards = new Path(new BezierLine(endPose, startPose));
         backwards.setLinearHeadingInterpolation(endPose.getHeading(), startPose.getHeading());
 
+        follower.followPath(forwards);
+        follower.update();
+
 //        //  This code may not be needed since we are not using PathChain.
 //        //  build() returns a pathChain object
 //        follower.pathBuilder()
@@ -114,11 +117,21 @@ public class AdeelRotationTest extends OpMode {
      */
     @Override
     public void loop() {
-        follower.followPath(forwards);
-        follower.update();
-        follower.followPath(backwards);
-        follower.update();
 
+        boolean movingForward = true;
+
+        if (!follower.isBusy()) {
+            if (movingForward) {
+                movingForward = false;
+                follower.followPath(backwards);
+            } else {
+                movingForward = true;
+                follower.followPath(forwards);
+            }
+        }
+        telemetry.addData("X", follower.getPose().getX());
+        telemetry.addData("y", follower.getPose().getY());
+        telemetry.addData("heading", Math.toDegrees(follower.getPose().getHeading()));
         telemetry.update();
 //        drawCurrentAndHistory();
 
