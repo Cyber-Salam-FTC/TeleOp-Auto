@@ -68,7 +68,6 @@ We welcome contributions from team members and collaborators! Please follow our 
 
 This project is licensed under the MIT License. See `LICENSE.md` for details.
 
-<<<<<<< HEAD
 ## Version 10.3 (20250625-090416)
 
 ### Breaking Changes
@@ -118,9 +117,7 @@ This project is licensed under the MIT License. See `LICENSE.md` for details.
 * Fixes issue [1232](https://github.com/FIRST-Tech-Challenge/FtcRobotController/issues/1232), a rare race condition where using the log rapidly along with other telemetry could cause a crash.
 
 ## Version 10.2 (20250121-174034)
-=======
----
->>>>>>> 814fb3021175d689774fa9fe176076e1f8626d97
+
 
 ## 🙌 Acknowledgments
 
