@@ -66,7 +66,7 @@ public class AdeelRotationTest extends OpMode {
     public void start() {
 
         Pose startPose = new Pose (0, 0, Math.PI);
-        Pose endPose = new Pose (0, 0, 0);
+        Pose endPose = new Pose (24, 24, 0);
         //        follower.deactivateAllPIDFs();
         follower.activateHeading();
 
