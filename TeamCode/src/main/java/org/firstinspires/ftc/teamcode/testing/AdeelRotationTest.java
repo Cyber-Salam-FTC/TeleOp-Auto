@@ -72,9 +72,9 @@ public class AdeelRotationTest extends OpMode {
 
         PathChain path = follower.pathBuilder()
                 .addPath(new BezierLine(startPose, endPose))
-                .setLinearHeadingInterpolation(startPose.getHeading(), endPose.getHeading())
+                .setLinearHeadingInterpolation(startPose.getHeading(), endPose.getHeading(), 1)
                 .addPath(new BezierLine(endPose, startPose))
-                .setLinearHeadingInterpolation(endPose.getHeading(), startPose.getHeading())
+                .setLinearHeadingInterpolation(endPose.getHeading(), startPose.getHeading(), 1)
                 .build();
 
 //        backwards = new Path(new BezierLine(endPose, startPose));
@@ -101,19 +101,11 @@ public class AdeelRotationTest extends OpMode {
     @Override
     public void loop() {
         follower.update();
-//        drawCurrentAndHistory();
+        drawCurrentAndHistory();
 
-//        if (!follower.isBusy()) {
-//            if (forward) {
-//                forward = false;
-//                follower.followPath(backwards);
-//            } else {
-//                forward = true;
-//                follower.followPath(forwards);
-//            }
-//        }
-
-//            telemetry.debug("Turn the robot manually to test the Heading PIDF(s).");
+        if (follower.atParametricEnd()) {
+            follower.followPath(triangle, true);
+        }
         telemetry.update();
     }
 }
