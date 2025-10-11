@@ -20,9 +20,9 @@ public class Constants {
             .forwardZeroPowerAcceleration(1.0)
             .lateralZeroPowerAcceleration(1.0)
             .translationalPIDFCoefficients(new PIDFCoefficients(
-                    0.1,
+                    0.05,
                     0.0009,
-                    0,
+                    0.02,
                     0.02
             ))
             .headingPIDFCoefficients(new PIDFCoefficients(
@@ -32,22 +32,22 @@ public class Constants {
                     0.02
             ))
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(
-                    0.035,
+                    0.02,
                     0.006,
-                    0,
+                    0.01,
                     0,
                     0.02
             ))
             .centripetalScaling(0.001);
     public static PathConstraints pathConstraints = new PathConstraints(
             0.995,
-            0.1,
-            0.1,
+            1.0,
+            2.0,
             0.009,
-            50,
-            1.25,
+            5,
+            60,
             10,
-            1
+            50
     );
     public static PinpointConstants localizerConstants = new PinpointConstants()
             .forwardPodY(-4)
@@ -59,7 +59,7 @@ public class Constants {
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
     public static MecanumConstants drivetrain = new MecanumConstants()
-            .maxPower(0.5)
+            .maxPower(1)
             .rightFrontMotorName("rightFront")
             .rightRearMotorName("rightRear")
             .leftRearMotorName("leftRear")
