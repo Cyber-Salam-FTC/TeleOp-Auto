@@ -61,6 +61,7 @@ public class RotationTest extends OpMode {
                 .setLinearHeadingInterpolation(endPose.getHeading(), startPose.getHeading())
                 .build();
 
+        follower.update();
         follower.followPath(triangle);
     }
 }
