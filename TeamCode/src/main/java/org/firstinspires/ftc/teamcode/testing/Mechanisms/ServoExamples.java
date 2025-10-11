@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.testing.Mechanisms;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp (name = "Servo Test")
 public class ServoExamples extends OpMode {
@@ -11,6 +9,7 @@ public class ServoExamples extends OpMode {
     double leftTrigger, rightTrigger;
     double currentServoPosition, newServoPosition;
     double iterations;
+    double delta;
 
     @Override
     public void init() {
@@ -22,6 +21,7 @@ public class ServoExamples extends OpMode {
         servo.setServoPos(0);
         newServoPosition = 0;
         iterations = 0;
+        delta = 0.2;
 
     }
     @Override
@@ -30,27 +30,33 @@ public class ServoExamples extends OpMode {
         rightTrigger = gamepad1.right_trigger;
         iterations ++;
 
+        // increment servo position by "delta" such that newServoPosition must be between 0 and 1
         if (leftTrigger > 0 && iterations == 1) {
-            if (newServoPosition > 0 && newServoPosition+0.3 < 1) {
-                newServoPosition = newServoPosition + 0.3;
+            if (newServoPosition > 0 && newServoPosition+delta <= 1) {
+                newServoPosition = newServoPosition + delta;
                 servo.setServoPos(newServoPosition);
             }
         }
+        // decrement servo position by "delta" such that newServoPosition must be between 0 and 1
         if (rightTrigger > 0 && iterations == 1) {
-            if (newServoPosition < 1 && newServoPosition - 0.3 > 0) {
-                newServoPosition = newServoPosition - 0.3;
+            if (newServoPosition > 0 && newServoPosition - delta >= 0) {
+                newServoPosition = newServoPosition - delta;
                 servo.setServoPos(newServoPosition);
             }
         }
         if (iterations > 100) {
             iterations = 0;
         }
-
+        // if we want to reset servo position ...
+        if (gamepad1.options) {
+            servo.setServoPos(0);
+        }
 
         telemetry.addData("currentServoPosition", currentServoPosition);
         telemetry.addData("newServoPosition", newServoPosition);
         telemetry.addData("leftTrigger", gamepad1.left_trigger);
         telemetry.addData("rightTrigger", gamepad1.right_trigger);
+        telemetry.addData("options button", gamepad1.options);
         telemetry.addData("iterations", iterations);
         telemetry.update();
     }
