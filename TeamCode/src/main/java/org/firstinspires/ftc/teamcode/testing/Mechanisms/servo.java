@@ -12,12 +12,18 @@ public class servo {
         servoRot = hwMap.get(CRServo.class, "servo_Rot");
 //        servoPos.scaleRange(0, 1);
         servoPos.setDirection(Servo.Direction.REVERSE); //set direction to reverse
-        servoPos.setPosition(0);
     }
     public void setServoPos(double angle) {
         servoPos.setPosition(angle);
     }
+    public double getServoPos() {
+        return servoPos.getPosition();
+    }
+    public void setServoDirection (Servo.Direction direction) {
+        servoPos.setDirection(direction);
+    }
     public void setServoRot(double power) {
         servoRot.setPower(power);
     }
+
 }
