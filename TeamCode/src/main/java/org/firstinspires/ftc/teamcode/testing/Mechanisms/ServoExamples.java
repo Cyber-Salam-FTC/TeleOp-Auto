@@ -44,7 +44,7 @@ public class ServoExamples extends OpMode {
                 servo.setServoPos(newServoPosition);
             }
         }
-        if (iterations > 100) {
+        if (iterations > 50) {
             iterations = 0;
         }
         // if we want to reset servo position ...
