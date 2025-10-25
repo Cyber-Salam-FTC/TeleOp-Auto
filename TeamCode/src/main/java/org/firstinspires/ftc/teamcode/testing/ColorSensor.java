@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.testing;
 import android.graphics.Color;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
@@ -12,43 +11,51 @@ import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 public class ColorSensor extends LinearOpMode {
     private NormalizedColorSensor sensor;
 
+    @Override
     public void runOpMode() {
-            sensor = hardwareMap.get(NormalizedColorSensor.class, "colorSensor");
+        try {
+            sensor = hardwareMap.get(NormalizedColorSensor.class, "color1");
+        } catch (Exception e) {
+            telemetry.addData("ERROR", "Could not find color sensor 'color1'. Check your hardware map!");
+            telemetry.update();
+            return;
+        }
 
-
-            waitForStart();
+        waitForStart();
 
         while (opModeIsActive()) {
             NormalizedRGBA colors = sensor.getNormalizedColors();
             float[] hsvValues = new float[3];
             Color.colorToHSV(colors.toColor(), hsvValues);
 
-            // Get the hue value from the HSV array
             float hue = hsvValues[0];
 
-            double red = colors.red;
-            double green = colors.green;
-            double blue = colors.blue;
+            // Convert to float for setLedColor compatibility
+            float red = (float)colors.red;
+            float green = (float)colors.green;
+            float blue = (float)colors.blue;
 
+            // Display raw sensor data for easy debugging
+            telemetry.addData("A", "%.3f", colors.alpha);
+            telemetry.addData("R", "%.3f", colors.red);
+            telemetry.addData("G", "%.3f", colors.green);
+            telemetry.addData("B", "%.3f", colors.blue);
+            telemetry.addData("HUE", "%.0f", hue); // The key value for color identification
 
-            if (hue >= 105 && hue < 165) {
+            // Color detection logic
+            if (hue >= 105 && hue < 190) {
                 telemetry.addData("Detected Color", "GREEN");
-            } else if (hue >= 260 && hue < 300) {
+            } else if (hue >= 206 && hue < 320) { // Expanded the range for Purple/Magenta
                 telemetry.addData("Detected Color", "PURPLE");
-            } else if ((hue >= 0 && hue < 15) || (hue >= 345 && hue <= 360)) {
-                telemetry.addData("Detected Color", "RED");
             } else {
                 telemetry.addData("Detected Color", "UNKNOWN");
             }
 
             telemetry.update();
 
-
-//           Setting the controller to the purple or green colors based on color sensor value
-
+            // Setting the controller LED colors (requires float values)
             gamepad1.setLedColor(red, green, blue, 3000);
             gamepad2.setLedColor(red, green, blue, 3000);
-
         }
     }
 }
