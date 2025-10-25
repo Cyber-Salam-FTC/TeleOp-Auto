@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp (name = "Servo Test")
 public class ServoExamples extends OpMode {
-    org.firstinspires.ftc.teamcode.testing.Mechanisms.servo servo = new org.firstinspires.ftc.teamcode.testing.Mechanisms.servo();
+    Servo servo = new Servo();
     boolean leftBumper, rightBumper;
     double currentServoPosition, newServoPosition;
     double iterations;
