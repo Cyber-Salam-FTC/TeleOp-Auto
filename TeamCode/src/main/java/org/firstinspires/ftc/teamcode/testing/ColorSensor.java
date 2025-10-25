@@ -43,9 +43,9 @@ public class ColorSensor extends LinearOpMode {
             telemetry.addData("HUE", "%.0f", hue); // The key value for color identification
 
             // Color detection logic
-            if (hue >= 105 && hue < 190         ) {
+            if (hue >= 105 && hue < 190) {
                 telemetry.addData("Detected Color", "GREEN");
-            } else if (hue >= 220 && hue < 320) { // Expanded the range for Purple/Magenta
+            } else if (hue >= 206 && hue < 320) { // Expanded the range for Purple/Magenta
                 telemetry.addData("Detected Color", "PURPLE");
             } else {
                 telemetry.addData("Detected Color", "UNKNOWN");
