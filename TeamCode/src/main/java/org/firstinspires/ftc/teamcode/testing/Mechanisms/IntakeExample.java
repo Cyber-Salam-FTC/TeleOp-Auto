@@ -12,11 +12,9 @@ public class IntakeExample extends OpMode {
     public void init() {
         intake = hardwareMap.get(DcMotor.class, "intake");
         intake.setDirection(DcMotor.Direction.FORWARD);
-        intake.setPower(1);
     }
 
     public void loop() {
-//        intake.setPower(0.5);
-
+        intake.setPower(0.2);
     }
 }

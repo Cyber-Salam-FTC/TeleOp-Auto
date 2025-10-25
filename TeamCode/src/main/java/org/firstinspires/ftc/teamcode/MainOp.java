@@ -19,7 +19,7 @@ public class MainOp extends OpMode {
     private DcMotor leftRear;
     private DcMotor rightFront;
     private DcMotor rightRear;
-    private DcMotor intake, outtake;
+    private DcMotor intake, outtake, rotor;
     private Servo door;
 
     private NormalizedColorSensor sensor;
@@ -35,6 +35,9 @@ public class MainOp extends OpMode {
 
     double forward, strafe, rotate;
 
+    boolean leftBumper, rightBumper;
+    double iterations;
+    int delta;
     MecanumDrive drive = new MecanumDrive();
 
     @Override
@@ -45,8 +48,13 @@ public class MainOp extends OpMode {
         rightRear = hardwareMap.get(DcMotor.class, "rightRear");
         sensor = hardwareMap.get(NormalizedColorSensor.class, "color1");
         door = hardwareMap.get(Servo.class, "door");
-        intake = hardwareMap.get(DcMotor.class, "intake");
-        outtake = hardwareMap.get(DcMotor.class, "outtake");
+//        intake = hardwareMap.get(DcMotor.class, "intake");
+//        outtake = hardwareMap.get(DcMotor.class, "outtake");
+        rotor = hardwareMap.get(DcMotor.class, "rotor");
+
+
+        rotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         leftRear.setDirection(DcMotor.Direction.REVERSE);
@@ -56,6 +64,12 @@ public class MainOp extends OpMode {
         drive.init(hardwareMap);
 
         door.setPosition(0);
+
+        leftBumper = false;
+        rightBumper = false;
+
+        iterations = 0;
+        delta = 96;
     }
 
     public void colorSense() {
@@ -118,12 +132,12 @@ public class MainOp extends OpMode {
 
 //        intake should always stay moving
 
-        intake.setPower(1);
+//        intake.setPower(1);
 
 //        outtake
 
 
-        outtake.setPower(gamepad2.right_stick_y);
+//        outtake.setPower(gamepad2.right_stick_y);
 
 //        door
 
@@ -134,6 +148,19 @@ public class MainOp extends OpMode {
 //        closed
         if (gamepad2.circle) {
             door.setPosition(0.3);
+        }
+
+//        rotor
+
+        rightBumper = gamepad1.right_bumper;
+        iterations ++;
+
+        if (rightBumper && iterations == 1) {
+            rotor.setTargetPosition(delta);
+            rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+        if (iterations > 50) {
+            iterations = 0;
         }
 
 

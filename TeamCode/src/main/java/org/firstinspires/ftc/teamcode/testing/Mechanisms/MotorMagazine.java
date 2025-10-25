@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.testing.Mechanisms;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+
+@TeleOp(name = "Motor Magazine Test")
 public class MotorMagazine extends OpMode {
     private DcMotor motor;
     boolean leftBumper, rightBumper;
@@ -12,14 +15,14 @@ public class MotorMagazine extends OpMode {
     int delta;
     @Override
     public void init() {
-        motor= hardwareMap.get(DcMotor.class, "motor");
+        motor= hardwareMap.get(DcMotor.class, "rotor");
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 //        motor.setDirection(DcMotorSimple.Direction.FORWARD);
         leftBumper = false;
         rightBumper = false;
 
-        motor.setPower(1);
+        motor.setPower(0.2);
         iterations = 0;
         delta = 96;
 
