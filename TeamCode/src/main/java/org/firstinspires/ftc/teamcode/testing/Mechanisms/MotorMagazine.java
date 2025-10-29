@@ -18,7 +18,6 @@ public class MotorMagazine extends OpMode {
         motor= hardwareMap.get(DcMotor.class, "rotor");
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        motor.setDirection(DcMotorSimple.Direction.FORWARD);
         leftBumper = false;
         rightBumper = false;
 
@@ -30,39 +29,19 @@ public class MotorMagazine extends OpMode {
     }
     @Override
     public void loop() {
-//        leftBumper = gamepad1.left_bumper;
         rightBumper = gamepad1.right_bumper;
-        iterations ++;
+        iterations = 1;
 
-        // increment servo position by "delta" such that newServoPosition must be between 0 and 1
-//        if (leftBumper && iterations == 1) {
-//            if (newMotorPosition >= 0 && newMotorPosition+delta <= 1) {
-//                newMotorPosition = newMotorPosition + delta;
-//                motor.getCurrentPosition(newMotorPosition);
-//            }
-//        }
-        // decrement servo position by "delta" such that newServoPosition must be between 0 and 1
-        if (rightBumper && iterations == 1) {
+        if (rightBumper) {
             motor.setTargetPosition(delta);
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            if (newMotorPosition >= 0 && newMotorPosition - delta >= 0) {
-//                newMotorPosition = newMotorPosition - delta;
-//                motor.getCurrentPosition(newMotorPosition);
-//            }
+            motor.setPower(0.2);
         }
         if (iterations > 50) {
             iterations = 0;
         }
-        // if we want to reset servo position ...
-//        if (gamepad1.options) {
-//            motor.getCurrentPosition(0);
-//        }
-
-//        telemetry.addData("currentServoPosition", currentMotorPosition);
-//        telemetry.addData("newServoPosition", newMotorPosition);
-//        telemetry.addData("leftBumper", gamepad1.left_trigger);
-        telemetry.addData("rightBumper", gamepad1.right_trigger);
-//        telemetry.addData("options button", gamepad1.options);
+        telemetry.addData("rightBumper", gamepad1.right_bumper);
+        telemetry.addData("currentMotorPosition",currentMotorPosition);
         telemetry.addData("iterations", iterations);
         telemetry.update();
     }

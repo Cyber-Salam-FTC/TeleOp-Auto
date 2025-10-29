@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.pedropathing;
 
-import com.pedropathing.Drivetrain;
 import com.pedropathing.control.FilteredPIDFCoefficients;
 import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.follower.Follower;
@@ -50,7 +49,7 @@ public class Constants {
             50
     );
     public static PinpointConstants localizerConstants = new PinpointConstants()
-            .forwardPodY(-4)
+            .forwardPodY(-7.0)
             .strafePodX(7.0)
             .distanceUnit(DistanceUnit.INCH)
             .hardwareMapName("pinpointComputer")
@@ -76,3 +75,4 @@ public class Constants {
                 .build();
     }
 }
+
