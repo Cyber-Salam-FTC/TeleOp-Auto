@@ -21,6 +21,7 @@ public class MainOp extends OpMode {
     private DcMotor rightRear;
     private DcMotor intake, outtake, rotor;
     private Servo door;
+//    private double outtakePower = 1;
 
     private NormalizedColorSensor sensor;
     private String lastDetectedColor = "NONE";
@@ -53,13 +54,18 @@ public class MainOp extends OpMode {
         rotor = hardwareMap.get(DcMotor.class, "rotor");
 
         outtake.setDirection(DcMotorSimple.Direction.REVERSE);
+        outtake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        door.setDirection(Servo.Direction.REVERSE);
 
 
-        rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rotor.setTargetPosition(0);
-        rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rotor.setPower(0.0);
+
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         leftFront.setDirection(DcMotor.Direction.REVERSE);
@@ -136,22 +142,19 @@ public class MainOp extends OpMode {
 
         colorSense();
 
-        intake.setPower(0.5);
+        intake.setPower(1);
 
-        if (gamepad2.square) {
-            outtake.setPower(1);
-        }
 
         if (gamepad2.triangle) {
             outtake.setPower(0);
         }
 
-        if (gamepad2.cross) {
+        if (gamepad2.a) {
             door.setPosition(0);
         }
 
-        if (gamepad2.circle) {
-            door.setPosition(0.3);
+        if (gamepad2.b) {
+            door.setPosition(0.15);
         }
 
         rightBumper = gamepad1.right_bumper;
@@ -166,17 +169,37 @@ public class MainOp extends OpMode {
 //            iterations = 0;
 //        }
 
-        if (rightBumper) {
-            rotor.setPower(0.1);
+//        if (rightBumper) {
+//            rotor.setPower(0.1);
+//        }
+//
+//        if (!rightBumper) {
+//            rotor.setPower(0);
+//        }
+
+//        dpad controls for outtake
+
+//        if (gamepad2.dpad_up) {
+//            outtake.setPower(0.9);
+//        }if (gamepad2.dpad_down) {
+//            outtake.setPower(0.75);
+//        }if (gamepad2.dpad_right) {
+//        }if (gamepad2.dpad_left) {
+//            outtake.setPower(0.3);
+//        }
+
+        if (gamepad2.dpad_up) {
+            outtake.setPower(0.9);
+        }if (gamepad2.dpad_down) {
+            outtake.setPower(0.7);
         }
 
-        if (!rightBumper) {
-            rotor.setPower(0);
-        }
+        rotor.setPower(gamepad2.right_stick_y * 0.3);
 
         telemetry.addData("iterations", iterations);
         telemetry.addData("Rotor Position", rotor.getCurrentPosition());
         telemetry.addData("Rotor Target", rotor.getTargetPosition());
+        telemetry.addData("Outtake Power", outtake.getPower());
 
         telemetry.update();
     }
