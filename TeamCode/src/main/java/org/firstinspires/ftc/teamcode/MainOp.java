@@ -161,13 +161,12 @@ public class MainOp extends OpMode {
 
         rightBumper = gamepad2.right_bumper;
 
-
         //        iterations++;
 //
-       if (rightBumper && rotor.getCurrentPosition()>delta) {
+       if (rightBumper && !rotor.isBusy()) {
             rotor.setTargetPosition(delta);
-            rotor.setPower(-0.5);
-        }else if(rotor.getCurrentPosition()<=delta){
+            rotor.setPower(-1);
+       } else if (!rotor.isBusy()) {
            rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
        }
 //        if (iterations > 50) {
