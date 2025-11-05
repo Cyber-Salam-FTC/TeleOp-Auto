@@ -163,11 +163,9 @@ public class MainOp extends OpMode {
 
         //        iterations++;
 //
-       if (rightBumper && !rotor.isBusy()) {
+       if (rightBumper) {
             rotor.setTargetPosition(delta);
             rotor.setPower(-1);
-       } else if (!rotor.isBusy()) {
-           rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
        }
 //        if (iterations > 50) {
 //            iterations = 0;
