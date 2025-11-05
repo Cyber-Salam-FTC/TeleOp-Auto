@@ -161,41 +161,15 @@ public class MainOp extends OpMode {
 
         rightBumper = gamepad2.right_bumper;
 
-        //        iterations++;
-//
        if (rightBumper) {
             rotor.setTargetPosition(delta);
             rotor.setPower(1);
             rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            while (rotor.isBusy()) {
+                telemetry.addData("Rotor position", rotor.getCurrentPosition());
+            }
+            rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
        }
-//        if (iterations > 50) {
-//            iterations = 0;
-//        }
-
-//        if (rightBumper) {
-//            rotor.setPower(0.1);
-//        }
-//
-//        if (!rightBumper) {
-//            rotor.setPower(0);
-//        }
-
-//        dpad controls for outtake
-
-//        if (gamepad2.dpad_up) {
-//            outtake.setPower(0.9);
-//        }if (gamepad2.dpad_down) {
-//            outtake.setPower(0.75);
-//        }if (gamepad2.dpad_right) {
-//        }if (gamepad2.dpad_left) {
-//            outtake.setPower(0.3);
-//        }
-
-//        if (gamepad2.dpad_up) {
-//            outtake.setPower(0.9);
-//        }if (gamepad2.dpad_down) {
-//            outtake.setPower(0.7);
-//        }
 
         if (gamepad1.dpad_up) {
             outtake.setVelocity(2520);
