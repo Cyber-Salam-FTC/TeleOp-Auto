@@ -166,7 +166,7 @@ public class MainOp extends OpMode {
 //
        if (rightBumper && rotor.getCurrentPosition()<delta) {
             rotor.setTargetPosition(delta);
-            rotor.setPower(0.5);
+            rotor.setPower(-0.5);
         }else if(rotor.getCurrentPosition()>=delta){
            rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
        }
@@ -209,7 +209,7 @@ public class MainOp extends OpMode {
 
         rotor.setPower(gamepad2.right_stick_y * 0.3);
 
-        telemetry.addData("iterations", iterations);
+        telemetry.addData("rightBumper", rightBumper);
         telemetry.addData("Rotor Position", rotor.getCurrentPosition());
         telemetry.addData("Rotor Target", rotor.getTargetPosition());
         telemetry.addData("Outtake Power", outtake.getPower());
