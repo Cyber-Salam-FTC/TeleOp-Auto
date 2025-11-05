@@ -7,6 +7,7 @@ import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
@@ -27,6 +28,7 @@ public class AutoUsingCamTest extends LinearOpMode {
     private Path currentPath;
 
     private DcMotor leftFront, leftRear, rightFront, rightRear, intake;
+    private DcMotorEx outtake;
     private Servo door;
 
     private int foundID = 0;
@@ -108,6 +110,7 @@ public class AutoUsingCamTest extends LinearOpMode {
         leftRear = hardwareMap.get(DcMotor.class, "leftRear");
         rightFront = hardwareMap.get(DcMotor.class, "rightFront");
         rightRear = hardwareMap.get(DcMotor.class, "rightRear");
+        outtake = hardwareMap.get(DcMotorEx.class, "outtake");
         door = hardwareMap.get(Servo.class, "door");
 
         rightFront.setDirection(DcMotor.Direction.REVERSE);
@@ -288,7 +291,7 @@ public class AutoUsingCamTest extends LinearOpMode {
     }
 
     private void runShooterMechanism() {
-//        run outtake
+        outtake.setVelocity(1800);
     }
 
     private void shootBall() {
