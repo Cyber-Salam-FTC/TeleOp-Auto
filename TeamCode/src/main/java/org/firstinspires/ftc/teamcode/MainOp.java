@@ -134,14 +134,14 @@ public class MainOp extends LinearOpMode {
                 rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
 
-//            iterations = 0;
-//           while (rotor.isBusy() && iterations < 40) {
-//               telemetry.addData("rotorPosition", rotorPosition);
-//               telemetry.addData("Current rotor position", rotor.getCurrentPosition());
-//               telemetry.update();
-//               sleep(25);
-//               iterations++;
-//           }
+            iterations = 0;
+           while (rotor.isBusy() && iterations < 40) {
+               telemetry.addData("rotorPosition", rotorPosition);
+               telemetry.addData("Current rotor position", rotor.getCurrentPosition());
+               telemetry.update();
+               sleep(25);
+               iterations++;
+           }
 
             if (gamepad1.dpad_up) {
                 outtake.setVelocity(2520);
@@ -156,7 +156,7 @@ public class MainOp extends LinearOpMode {
             telemetry.addData("rightBumper", rightBumper);
             telemetry.addData("Rotor Position", rotor.getCurrentPosition());
             telemetry.addData("Rotor Target", rotor.getTargetPosition());
-            telemetry.addData("Outtake Power", outtake.getPower());
+            telemetry.addData("Outtake Power", outtake.getVelocity());
 
             telemetry.update();
         }
