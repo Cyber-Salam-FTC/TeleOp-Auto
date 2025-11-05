@@ -83,7 +83,7 @@ public class MainOp extends OpMode {
         rightBumper = false;
 
         iterations = 0;
-        delta = 96;
+        delta = -96;
     }
 
     public void colorSense() {
