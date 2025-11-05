@@ -144,11 +144,11 @@ public class MainOp extends LinearOpMode {
            }
 
             if (gamepad1.dpad_up) {
-                outtake.setVelocity(2520);
+                outtake.setVelocity(2200);
             }
 
             if (gamepad1.dpad_down) {
-                outtake.setVelocity(1400);
+                outtake.setVelocity(1800);
             }
 
             rotor.setPower(gamepad2.right_stick_y * 0.3);
