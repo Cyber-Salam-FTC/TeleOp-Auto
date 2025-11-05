@@ -169,13 +169,18 @@ public class MainOp extends OpMode {
             rotor.setPower(1);
             rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
        }
-//       if (rotor.isBusy()) {
-//           while (rotor.isBusy()) {
-//               telemetry.addData("rotorPosition", rotorPosition);
-//               telemetry.addData("Current rotor position", rotor.getCurrentPosition());
-//               telemetry.update();
-//           }
-//       }
+       if (rotor.isBusy()) {
+           while (rotor.isBusy()) {
+               telemetry.addData("rotorPosition", rotorPosition);
+               telemetry.addData("Current rotor position", rotor.getCurrentPosition());
+               telemetry.update();
+               try {
+                   wait(10);
+               } catch (InterruptedException e) {
+                   throw new RuntimeException(e);
+               }
+           }
+       }
 
         if (gamepad1.dpad_up) {
             outtake.setVelocity(2520);
