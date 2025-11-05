@@ -40,7 +40,7 @@ public class MainOp extends OpMode {
 
     boolean leftBumper, rightBumper;
     double iterations;
-    int delta;
+    int delta, rotorPosition;
     MecanumDrive drive = new MecanumDrive();
 
     @Override
@@ -84,6 +84,7 @@ public class MainOp extends OpMode {
 
         iterations = 0;
         delta = 96;
+        rotorPosition = 0;
     }
 
     public void colorSense() {
@@ -148,7 +149,7 @@ public class MainOp extends OpMode {
 
 
         if (gamepad2.triangle) {
-            outtake.setPower(0);
+            outtake.setVelocity(0);
         }
 
         if (gamepad2.a) {
@@ -162,13 +163,16 @@ public class MainOp extends OpMode {
         rightBumper = gamepad2.right_bumper;
 
        if (rightBumper) {
-            rotor.setTargetPosition(delta);
+           rotorPosition += delta;
+            rotor.setTargetPosition(rotorPosition);
             rotor.setPower(1);
             rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            while (rotor.isBusy()) {
-                telemetry.addData("Rotor position", rotor.getCurrentPosition());
-            }
-            rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+       }
+       if (rotor.isBusy()) {
+           while (rotor.isBusy()) {
+               telemetry.addData("rotorPosition", rotorPosition);
+               telemetry.addData("Current rotor position", rotor.getCurrentPosition());
+           }
        }
 
         if (gamepad1.dpad_up) {
