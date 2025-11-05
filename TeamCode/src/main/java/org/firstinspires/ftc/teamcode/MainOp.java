@@ -63,6 +63,7 @@ public class MainOp extends OpMode {
 
         rotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rotor.setDirection(DcMotor.Direction.REVERSE);
 
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
