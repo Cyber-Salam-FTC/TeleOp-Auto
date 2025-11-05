@@ -61,7 +61,7 @@ public class MainOp extends OpMode {
         door.setDirection(Servo.Direction.REVERSE);
 
 
-        rotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -160,13 +160,16 @@ public class MainOp extends OpMode {
         }
 
         rightBumper = gamepad1.right_bumper;
-//        iterations++;
+
+
+        //        iterations++;
 //
-//        if (rightBumper) {
-//            rotor.setTargetPosition(delta);
-//            rotor.setPower(0.5);
-//        }
-//
+       if (rightBumper && rotor.getCurrentPosition()<delta) {
+            rotor.setTargetPosition(delta);
+            rotor.setPower(0.5);
+        }else if(rotor.getCurrentPosition()>=delta){
+           rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+       }
 //        if (iterations > 50) {
 //            iterations = 0;
 //        }
