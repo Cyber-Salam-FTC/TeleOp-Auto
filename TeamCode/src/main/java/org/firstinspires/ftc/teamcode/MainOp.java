@@ -56,7 +56,7 @@ public class MainOp extends OpMode {
         rotor = hardwareMap.get(DcMotor.class, "rotor");
 
         outtake.setDirection(DcMotorSimple.Direction.REVERSE);
-        outtake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        outtake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         door.setDirection(Servo.Direction.REVERSE);
 
