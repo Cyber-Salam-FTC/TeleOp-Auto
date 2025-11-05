@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -14,7 +15,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.cybersalam.hardware.MecanumDrive;
 
 @TeleOp(name = "Cyber Salam TeleOp")
-public class MainOp extends OpMode {
+public class MainOp extends LinearOpMode {
 
     private DcMotor leftFront;
     private DcMotor leftRear;
@@ -44,7 +45,7 @@ public class MainOp extends OpMode {
     MecanumDrive drive = new MecanumDrive();
 
     @Override
-    public void init() {
+    public void runOpMode() {
         leftFront = hardwareMap.get(DcMotor.class, "leftFront");
         leftRear = hardwareMap.get(DcMotor.class, "leftRear");
         rightFront = hardwareMap.get(DcMotor.class, "rightFront");
@@ -86,6 +87,70 @@ public class MainOp extends OpMode {
         iterations = 0;
         delta = 48;
         rotorPosition = 0;
+
+        while (opModeIsActive()) {
+
+            forward = gamepad1.right_trigger - gamepad1.left_trigger;
+            strafe = gamepad1.left_stick_x;
+            rotate = gamepad1.right_stick_x;
+
+            drive.drive(forward, strafe, rotate);
+
+            telemetry.addData("Right Trigger Value", gamepad1.right_trigger);
+            telemetry.addData("Left Trigger Value", gamepad1.left_trigger);
+            telemetry.addData("Left Stick X Value", gamepad1.left_stick_x);
+
+
+            colorSense();
+
+            intake.setPower(1);
+
+
+            if (gamepad2.triangle) {
+                outtake.setVelocity(0);
+            }
+
+            if (gamepad2.a) {
+                door.setPosition(0);
+            }
+
+            if (gamepad2.b) {
+                door.setPosition(0.15);
+            }
+
+            rightBumper = gamepad2.right_bumper;
+
+            if (rightBumper) {
+                rotorPosition += delta;
+                rotor.setTargetPosition(rotorPosition);
+                rotor.setPower(1);
+                rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+//       if (rotor.isBusy()) {
+//           while (rotor.isBusy()) {
+//               telemetry.addData("rotorPosition", rotorPosition);
+//               telemetry.addData("Current rotor position", rotor.getCurrentPosition());
+//               telemetry.update();
+//           }
+//       }
+
+            if (gamepad1.dpad_up) {
+                outtake.setVelocity(2520);
+            }
+
+            if (gamepad1.dpad_down) {
+                outtake.setVelocity(1400);
+            }
+
+            rotor.setPower(gamepad2.right_stick_y * 0.3);
+
+            telemetry.addData("rightBumper", rightBumper);
+            telemetry.addData("Rotor Position", rotor.getCurrentPosition());
+            telemetry.addData("Rotor Target", rotor.getTargetPosition());
+            telemetry.addData("Outtake Power", outtake.getPower());
+
+            telemetry.update();
+        }
     }
 
     public void colorSense() {
@@ -130,74 +195,6 @@ public class MainOp extends OpMode {
         }
     }
 
-    @Override
-    public void loop() {
 
-        forward = gamepad1.right_trigger - gamepad1.left_trigger;
-        strafe = gamepad1.left_stick_x;
-        rotate = gamepad1.right_stick_x;
-
-        drive.drive(forward, strafe, rotate);
-
-        telemetry.addData("Right Trigger Value", gamepad1.right_trigger);
-        telemetry.addData("Left Trigger Value", gamepad1.left_trigger);
-        telemetry.addData("Left Stick X Value", gamepad1.left_stick_x);
-
-
-        colorSense();
-
-        intake.setPower(1);
-
-
-        if (gamepad2.triangle) {
-            outtake.setVelocity(0);
-        }
-
-        if (gamepad2.a) {
-            door.setPosition(0);
-        }
-
-        if (gamepad2.b) {
-            door.setPosition(0.15);
-        }
-
-        rightBumper = gamepad2.right_bumper;
-
-       if (rightBumper) {
-           rotorPosition += delta;
-            rotor.setTargetPosition(rotorPosition);
-            rotor.setPower(1);
-            rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-       }
-       if (rotor.isBusy()) {
-           while (rotor.isBusy()) {
-               telemetry.addData("rotorPosition", rotorPosition);
-               telemetry.addData("Current rotor position", rotor.getCurrentPosition());
-               telemetry.update();
-               try {
-                   wait(10);
-               } catch (InterruptedException e) {
-                   throw new RuntimeException(e);
-               }
-           }
-       }
-
-        if (gamepad1.dpad_up) {
-            outtake.setVelocity(2520);
-        }
-
-        if (gamepad1.dpad_down) {
-            outtake.setVelocity(1400);
-        }
-
-        rotor.setPower(gamepad2.right_stick_y * 0.3);
-
-        telemetry.addData("rightBumper", rightBumper);
-        telemetry.addData("Rotor Position", rotor.getCurrentPosition());
-        telemetry.addData("Rotor Target", rotor.getTargetPosition());
-        telemetry.addData("Outtake Power", outtake.getPower());
-
-        telemetry.update();
-    }
 
 }
