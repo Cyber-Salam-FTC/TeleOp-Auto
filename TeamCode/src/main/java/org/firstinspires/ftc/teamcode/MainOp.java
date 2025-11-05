@@ -65,6 +65,7 @@ public class MainOp extends LinearOpMode {
         rotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rotor.setDirection(DcMotor.Direction.REVERSE);
+        rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -119,14 +120,19 @@ public class MainOp extends LinearOpMode {
             }
 
             rightBumper = gamepad2.right_bumper;
+            leftBumper = gamepad2.left_bumper;
 
             if (rightBumper) {
                 rotorPosition += delta;
-                rotor.setTargetPosition(rotorPosition);
-                rotor.setPower(1);
-                rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
-       if (rotor.isBusy()) {
+            if (leftBumper) {
+                rotorPosition -= delta;
+            }
+            rotor.setTargetPosition(rotorPosition);
+            rotor.setPower(1);
+            rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            if (rotor.isBusy()) {
            while (rotor.isBusy()) {
                telemetry.addData("rotorPosition", rotorPosition);
                telemetry.addData("Current rotor position", rotor.getCurrentPosition());
