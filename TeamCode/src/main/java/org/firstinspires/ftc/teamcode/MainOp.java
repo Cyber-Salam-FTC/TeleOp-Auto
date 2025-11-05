@@ -165,7 +165,7 @@ public class MainOp extends OpMode {
 //
        if (rightBumper) {
             rotor.setTargetPosition(delta);
-            rotor.setPower(-1);
+            rotor.setPower(1);
        }
 //        if (iterations > 50) {
 //            iterations = 0;
