@@ -122,24 +122,26 @@ public class MainOp extends LinearOpMode {
             rightBumper = gamepad2.right_bumper;
             leftBumper = gamepad2.left_bumper;
 
-            if (rightBumper) {
+            if (rightBumper && !rotor.isBusy()) {
                 rotorPosition += delta;
             }
-            if (leftBumper) {
+            if (leftBumper & !rotor.isBusy()) {
                 rotorPosition -= delta;
             }
-            rotor.setTargetPosition(rotorPosition);
-            rotor.setPower(1);
-            rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            if ((rightBumper || leftBumper) && !rotor.isBusy()) {
+                rotor.setTargetPosition(rotorPosition);
+                rotor.setPower(1);
+                rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
 
-            iterations = 0;
-           while (rotor.isBusy() && iterations < 40) {
-               telemetry.addData("rotorPosition", rotorPosition);
-               telemetry.addData("Current rotor position", rotor.getCurrentPosition());
-               telemetry.update();
-               sleep(25);
-               iterations++;
-           }
+//            iterations = 0;
+//           while (rotor.isBusy() && iterations < 40) {
+//               telemetry.addData("rotorPosition", rotorPosition);
+//               telemetry.addData("Current rotor position", rotor.getCurrentPosition());
+//               telemetry.update();
+//               sleep(25);
+//               iterations++;
+//           }
 
             if (gamepad1.dpad_up) {
                 outtake.setVelocity(2520);
