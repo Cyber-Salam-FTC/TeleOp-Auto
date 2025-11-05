@@ -5,6 +5,7 @@ import android.graphics.Color;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
@@ -19,7 +20,8 @@ public class MainOp extends OpMode {
     private DcMotor leftRear;
     private DcMotor rightFront;
     private DcMotor rightRear;
-    private DcMotor intake, outtake, rotor;
+    private DcMotor intake, rotor;
+    private DcMotorEx outtake;
     private Servo door;
 //    private double outtakePower = 1;
 
@@ -50,7 +52,7 @@ public class MainOp extends OpMode {
         sensor = hardwareMap.get(NormalizedColorSensor.class, "color1");
         door = hardwareMap.get(Servo.class, "door");
         intake = hardwareMap.get(DcMotor.class, "intake");
-        outtake = hardwareMap.get(DcMotor.class, "outtake");
+        outtake = hardwareMap.get(DcMotorEx.class, "outtake");
         rotor = hardwareMap.get(DcMotor.class, "rotor");
 
         outtake.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -188,10 +190,18 @@ public class MainOp extends OpMode {
 //            outtake.setPower(0.3);
 //        }
 
-        if (gamepad2.dpad_up) {
-            outtake.setPower(0.9);
-        }if (gamepad2.dpad_down) {
-            outtake.setPower(0.7);
+//        if (gamepad2.dpad_up) {
+//            outtake.setPower(0.9);
+//        }if (gamepad2.dpad_down) {
+//            outtake.setPower(0.7);
+//        }
+
+        if (gamepad1.dpad_up) {
+            outtake.setVelocity(2520);
+        }
+
+        if (gamepad1.dpad_down) {
+            outtake.setVelocity(1400);
         }
 
         rotor.setPower(gamepad2.right_stick_y * 0.3);
