@@ -132,14 +132,14 @@ public class MainOp extends LinearOpMode {
             rotor.setPower(1);
             rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            if (rotor.isBusy()) {
-           while (rotor.isBusy()) {
+            iterations = 0;
+           while (rotor.isBusy() && iterations < 40) {
                telemetry.addData("rotorPosition", rotorPosition);
                telemetry.addData("Current rotor position", rotor.getCurrentPosition());
                telemetry.update();
                sleep(25);
+               iterations++;
            }
-       }
 
             if (gamepad1.dpad_up) {
                 outtake.setVelocity(2520);
