@@ -172,6 +172,7 @@ public class MainOp extends OpMode {
            while (rotor.isBusy()) {
                telemetry.addData("rotorPosition", rotorPosition);
                telemetry.addData("Current rotor position", rotor.getCurrentPosition());
+               telemetry.update();
            }
        }
 
