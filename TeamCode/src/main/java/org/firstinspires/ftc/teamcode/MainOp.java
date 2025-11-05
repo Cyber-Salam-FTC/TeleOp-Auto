@@ -138,9 +138,16 @@ public class MainOp extends LinearOpMode {
            while (rotor.isBusy() && iterations < 40) {
                telemetry.addData("rotorPosition", rotorPosition);
                telemetry.addData("Current rotor position", rotor.getCurrentPosition());
+               telemetry.addData("Iterations", iterations);
                telemetry.update();
                sleep(25);
                iterations++;
+           }
+           if (gamepad2.right_stick_y > 0.2) {
+               rotor.setPower(gamepad2.right_stick_y);
+           }
+           if (gamepad2.left_stick_y > 0.2) {
+               rotor.setPower(gamepad2.left_stick_y);
            }
 
             if (gamepad1.dpad_up) {
