@@ -159,15 +159,15 @@ public class MainOp extends OpMode {
             door.setPosition(0.15);
         }
 
-        rightBumper = gamepad1.right_bumper;
+        rightBumper = gamepad2.right_bumper;
 
 
         //        iterations++;
 //
-       if (rightBumper && rotor.getCurrentPosition()<delta) {
+       if (rightBumper && rotor.getCurrentPosition()>delta) {
             rotor.setTargetPosition(delta);
             rotor.setPower(-0.5);
-        }else if(rotor.getCurrentPosition()>=delta){
+        }else if(rotor.getCurrentPosition()<=delta){
            rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
        }
 //        if (iterations > 50) {
