@@ -56,7 +56,7 @@ public class MainOp extends OpMode {
         rotor = hardwareMap.get(DcMotor.class, "rotor");
 
         outtake.setDirection(DcMotorSimple.Direction.REVERSE);
-        outtake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        outtake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         door.setDirection(Servo.Direction.REVERSE);
 
@@ -166,6 +166,7 @@ public class MainOp extends OpMode {
        if (rightBumper) {
             rotor.setTargetPosition(delta);
             rotor.setPower(1);
+            rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
        }
 //        if (iterations > 50) {
 //            iterations = 0;
