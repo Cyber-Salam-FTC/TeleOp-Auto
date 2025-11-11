@@ -89,6 +89,8 @@ public class MainOp extends LinearOpMode {
         delta = 48;
         rotorPosition = 0;
 
+        waitForStart();
+
         while (opModeIsActive()) {
 
             forward = gamepad1.right_trigger - gamepad1.left_trigger;
@@ -116,7 +118,7 @@ public class MainOp extends LinearOpMode {
             }
 
             if (gamepad2.b) {
-                door.setPosition(0.15);
+                door.setPosition(0.25);
             }
 
             rightBumper = gamepad2.right_bumper;
