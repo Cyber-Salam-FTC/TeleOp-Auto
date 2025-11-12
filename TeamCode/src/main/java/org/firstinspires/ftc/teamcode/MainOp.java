@@ -71,6 +71,7 @@ public class MainOp extends LinearOpMode {
         rotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rotor.setDirection(DcMotor.Direction.REVERSE);
         rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rotor.setTargetPosition(0);
         rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

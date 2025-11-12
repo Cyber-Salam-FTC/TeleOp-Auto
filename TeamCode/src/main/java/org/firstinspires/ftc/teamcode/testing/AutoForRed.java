@@ -290,6 +290,7 @@ public class AutoForRed extends LinearOpMode {
         rotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rotor.setDirection(DcMotor.Direction.REVERSE);
         rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rotor.setTargetPosition(0);
         rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         door.setDirection(Servo.Direction.REVERSE);
@@ -582,6 +583,8 @@ public class AutoForRed extends LinearOpMode {
 //        prevRightBumper = rightBumper;
 //        prevLeftBumper = leftBumper;
 //
+
+
 //        boolean forwards = rightBumper && !prevRightBumper;
 //        boolean backwards = leftBumper && !prevLeftBumper;
 //
