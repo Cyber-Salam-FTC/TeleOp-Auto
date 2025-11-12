@@ -139,13 +139,12 @@ public class MainOp extends LinearOpMode {
                 }
 
                 if (rightBumperPressed) {
-                    currentPresetIndex++;
+                    currentPresetIndex = (currentPresetIndex + 1) % ROTOR_PRESETS.length;
                 }
                 if (leftBumperPressed) {
-                    currentPresetIndex--;
+                    currentPresetIndex = (currentPresetIndex - 1 + ROTOR_PRESETS.length) % ROTOR_PRESETS.length;
                 }
 
-                currentPresetIndex = Math.max(0, Math.min(ROTOR_PRESETS.length - 1, currentPresetIndex));
                 rotorPosition = ROTOR_PRESETS[currentPresetIndex];
 
                 rotor.setTargetPosition(rotorPosition);
@@ -160,15 +159,13 @@ public class MainOp extends LinearOpMode {
                 }
                 rotor.setPower(rotorManualPower);
             } else if (rotor.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
-                rotor.setPower(0);
+                rotor.setTargetPosition(rotorPosition);
+                rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                rotor.setPower(1.0);
             }
 
             prevRightBumper = rightBumper;
             prevLeftBumper = leftBumper;
-
-            if (rotor.getCurrentPosition() == 288) {
-                rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            }
 
             updateTelemetry();
         }
