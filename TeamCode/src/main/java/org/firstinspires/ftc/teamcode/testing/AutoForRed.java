@@ -256,6 +256,8 @@ public class AutoForRed extends LinearOpMode {
     }
 
     final int[] ROTOR_PRESETS = {0, 48, 96, 144, 192, 240};
+    private final int DELTA = 48;
+    private int currentRotorPosition = 0;
     int currentPresetIndex = 0;
 
     public void runOpMode() {
@@ -554,68 +556,80 @@ public class AutoForRed extends LinearOpMode {
     }
 
     public void moveRotor(boolean forwards, boolean backwards) {
+        
+        if (forwards || backwards) {
 
-        boolean prevLeftBumper = false;
-        boolean prevRightBumper = false;
-
-        int rotorPosition;
-
-        boolean leftBumper, rightBumper;
-
-        rightBumper = forwards;
-        leftBumper = backwards;
-
-        prevRightBumper = rightBumper;
-        prevLeftBumper = leftBumper;
-
-        boolean rightBumperPressed = rightBumper && !prevRightBumper;
-        boolean leftBumperPressed = leftBumper && !prevLeftBumper;
-
-
-        rightBumper = gamepad2.right_bumper;
-        leftBumper = gamepad2.left_bumper;
-
-        rightBumperPressed = rightBumper && !prevRightBumper;
-        leftBumperPressed = leftBumper && !prevLeftBumper;
-
-        rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        if (rightBumperPressed) {
-            currentPresetIndex = (currentPresetIndex + 1) % ROTOR_PRESETS.length;
-        }
-        if (leftBumperPressed) {
-            currentPresetIndex = (currentPresetIndex - 1 + ROTOR_PRESETS.length) % ROTOR_PRESETS.length;
-        }
-
-        rotorPosition = ROTOR_PRESETS[currentPresetIndex];
-
-        rotor.setTargetPosition(rotorPosition);
-        rotor.setPower(0.7);
-
-        if (currentPresetIndex == 0) {
-            rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            currentPresetIndex = 1;
-            rotorPosition = ROTOR_PRESETS[currentPresetIndex];
-            rotor.setTargetPosition(rotorPosition);
-            rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
-
-        double rotorManualPower = -gamepad2.right_stick_y * 0.3;
-
-        if (Math.abs(rotorManualPower) > 0.1) {
-            if (rotor.getMode() != DcMotor.RunMode.RUN_USING_ENCODER) {
-                rotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            if (forwards) {
+                currentRotorPosition += DELTA;
             }
-            rotor.setPower(rotorManualPower);
-        } else if (rotor.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
-            rotor.setTargetPosition(rotor.getCurrentPosition());
-            rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            if (backwards) {
+                currentRotorPosition -= DELTA;
+            }
+
+            rotor.setTargetPosition(currentRotorPosition);
             rotor.setPower(0.7);
         }
-
-        prevRightBumper = rightBumper;
-        prevLeftBumper = leftBumper;
+//        boolean prevLeftBumper = false;
+//        boolean prevRightBumper = false;
+//
+//        int rotorPosition;
+//
+//        boolean leftBumper, rightBumper;
+//
+//        rightBumper = forwards;
+//        leftBumper = backwards;
+//
+//        prevRightBumper = rightBumper;
+//        prevLeftBumper = leftBumper;
+//
+//        boolean forwards = rightBumper && !prevRightBumper;
+//        boolean backwards = leftBumper && !prevLeftBumper;
+//
+//
+//        rightBumper = gamepad2.right_bumper;
+//        leftBumper = gamepad2.left_bumper;
+//
+//        forwards = rightBumper && !prevRightBumper;
+//        backwards = leftBumper && !prevLeftBumper;
+//
+//        rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//        if (forwards) {
+//            currentPresetIndex = (currentPresetIndex + 1) % ROTOR_PRESETS.length;
+//        }
+//        if (backwards) {
+//            currentPresetIndex = (currentPresetIndex - 1 + ROTOR_PRESETS.length) % ROTOR_PRESETS.length;
+//        }
+//
+//        rotorPosition = ROTOR_PRESETS[currentPresetIndex];
+//
+//        rotor.setTargetPosition(rotorPosition);
+//        rotor.setPower(0.7);
+//
+//        if (currentPresetIndex == 0) {
+//            rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            currentPresetIndex = 1;
+//            rotorPosition = ROTOR_PRESETS[currentPresetIndex];
+//            rotor.setTargetPosition(rotorPosition);
+//            rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        }
+//
+//        double rotorManualPower = -gamepad2.right_stick_y * 0.3;
+//
+//        if (Math.abs(rotorManualPower) > 0.1) {
+//            if (rotor.getMode() != DcMotor.RunMode.RUN_USING_ENCODER) {
+//                rotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            }
+//            rotor.setPower(rotorManualPower);
+//        } else if (rotor.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
+//            rotor.setTargetPosition(rotor.getCurrentPosition());
+//            rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            rotor.setPower(0.7);
+//        }
+//
+//        prevRightBumper = rightBumper;
+//        prevLeftBumper = leftBumper;
 
 
     }
