@@ -34,6 +34,9 @@ public class MainOp extends LinearOpMode {
     private final int[] ROTOR_PRESETS = {0, 48, 96, 144, 192, 240};
     private int currentPresetIndex = 0;
 
+    private final int DELTA = 48;
+    private int currentRotorPosition = 0;
+
     private enum RobotState {
         RIGHT_AND_FORWARD,
         LEFT_AND_FORWARD,
@@ -137,28 +140,31 @@ public class MainOp extends LinearOpMode {
             boolean leftBumperPressed = leftBumper && !prevLeftBumper;
 
             if (rightBumperPressed || leftBumperPressed) {
-                rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
                 if (rightBumperPressed) {
-                    currentPresetIndex = (currentPresetIndex + 1) % ROTOR_PRESETS.length;
+                    currentRotorPosition += DELTA;
+//                    currentPresetIndex = (currentPresetIndex + 1) % ROTOR_PRESETS.length;
                 }
                 if (leftBumperPressed) {
-                    currentPresetIndex = (currentPresetIndex - 1 + ROTOR_PRESETS.length) % ROTOR_PRESETS.length;
+                    currentRotorPosition -= DELTA;
+//                    currentPresetIndex = (currentPresetIndex - 1 + ROTOR_PRESETS.length) % ROTOR_PRESETS.length;
                 }
 
-                rotorPosition = ROTOR_PRESETS[currentPresetIndex];
+//                rotorPosition = ROTOR_PRESETS[currentPresetIndex];
 
-                rotor.setTargetPosition(rotorPosition);
+//                rotor.setTargetPosition(rotorPosition);
+                rotor.setTargetPosition(currentRotorPosition);
                 rotor.setPower(0.7);
 
-                if (currentPresetIndex == 0) {
-                    rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    currentPresetIndex = 1;
-                    rotorPosition = ROTOR_PRESETS[currentPresetIndex];
-                    rotor.setTargetPosition(rotorPosition);
-                    rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                }
+//                if (currentPresetIndex == 0) {
+//                    rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                    rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//                    currentPresetIndex = 1;
+//                    rotorPosition = ROTOR_PRESETS[currentPresetIndex];
+//                    rotor.setTargetPosition(rotorPosition);
+//                    rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                }
             }
 
             double rotorManualPower = -gamepad2.right_stick_y * 0.3;
