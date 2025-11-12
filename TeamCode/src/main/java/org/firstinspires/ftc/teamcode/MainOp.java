@@ -31,7 +31,7 @@ public class MainOp extends LinearOpMode {
     private NormalizedColorSensor sensor;
     private String lastDetectedColor = "NONE";
 
-    private final int[] ROTOR_PRESETS = {0, 48, 96, 144, 192, 240, 288};
+    private final int[] ROTOR_PRESETS = {0, 48, 96, 144, 192, 240};
     private int currentPresetIndex = 0;
 
     private enum RobotState {
@@ -68,6 +68,7 @@ public class MainOp extends LinearOpMode {
         rotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rotor.setDirection(DcMotor.Direction.REVERSE);
         rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -84,6 +85,8 @@ public class MainOp extends LinearOpMode {
         door.setPosition(0);
 
         rotorPosition = 0;
+        rotor.setTargetPosition(rotorPosition);
+        rotor.setPower(1.0);
 
         waitForStart();
 
@@ -134,9 +137,7 @@ public class MainOp extends LinearOpMode {
             boolean leftBumperPressed = leftBumper && !prevLeftBumper;
 
             if (rightBumperPressed || leftBumperPressed) {
-                if (rotor.getMode() != DcMotor.RunMode.RUN_TO_POSITION) {
-                    rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                }
+                rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
                 if (rightBumperPressed) {
                     currentPresetIndex = (currentPresetIndex + 1) % ROTOR_PRESETS.length;
@@ -148,7 +149,16 @@ public class MainOp extends LinearOpMode {
                 rotorPosition = ROTOR_PRESETS[currentPresetIndex];
 
                 rotor.setTargetPosition(rotorPosition);
-                rotor.setPower(1.0);
+                rotor.setPower(0.7);
+
+                if (currentPresetIndex == 0) {
+                    rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    currentPresetIndex = 1;
+                    rotorPosition = ROTOR_PRESETS[currentPresetIndex];
+                    rotor.setTargetPosition(rotorPosition);
+                    rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                }
             }
 
             double rotorManualPower = -gamepad2.right_stick_y * 0.3;
@@ -159,9 +169,9 @@ public class MainOp extends LinearOpMode {
                 }
                 rotor.setPower(rotorManualPower);
             } else if (rotor.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
-                rotor.setTargetPosition(rotorPosition);
+                rotor.setTargetPosition(rotor.getCurrentPosition());
                 rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                rotor.setPower(1.0);
+                rotor.setPower(0.7);
             }
 
             prevRightBumper = rightBumper;
@@ -176,7 +186,7 @@ public class MainOp extends LinearOpMode {
         telemetry.addData("Right Bumper Pressed", rightBumper && !prevRightBumper);
         telemetry.addData("Left Bumper Pressed", leftBumper && !prevLeftBumper);
         telemetry.addData("Rotor Mode", rotor.getMode());
-        telemetry.addData("Rotor Target", rotorPosition);
+        telemetry.addData("Rotor Index", currentPresetIndex);
         telemetry.addData("Rotor Current Position", rotor.getCurrentPosition());
         telemetry.addData("Outtake Velocity", outtake.getVelocity());
         telemetry.addData("Right Trigger", gamepad1.right_trigger);
