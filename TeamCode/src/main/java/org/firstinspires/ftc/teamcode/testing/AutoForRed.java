@@ -79,7 +79,11 @@ public class AutoForRed extends LinearOpMode {
                 }
                 sleep(500);
                 shootBall();
-                sleep(2000);
+                moveBigMovement();
+                shootBall();
+                moveBigMovement();
+                shootBall();
+                sleep(300);
                 follower.followPath(currentPath);
                 pathState++;
                 break;
@@ -251,10 +255,15 @@ public class AutoForRed extends LinearOpMode {
         }
     }
 
+    final int[] ROTOR_PRESETS = {0, 48, 96, 144, 192, 240};
+    int currentPresetIndex = 0;
+
     public void runOpMode() {
         boolean targetFound = false;
 
         delta = 48;
+
+
 
         leftFront = hardwareMap.get(DcMotor.class, "leftFront");
         leftRear = hardwareMap.get(DcMotor.class, "leftRear");
@@ -276,10 +285,10 @@ public class AutoForRed extends LinearOpMode {
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(startPose);
 
-        rotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rotor.setDirection(DcMotor.Direction.REVERSE);
         rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         door.setDirection(Servo.Direction.REVERSE);
 
@@ -372,13 +381,7 @@ public class AutoForRed extends LinearOpMode {
                 break;
             }
 
-            telemetry.addData("path state", pathState);
-            telemetry.addData("x", follower.getPose().getX());
-            telemetry.addData("y", follower.getPose().getY());
-            telemetry.addData("heading (deg)", Math.toDegrees(follower.getPose().getHeading()));
-
-
-            telemetry.addData("Door position", door.getPosition());
+            updateTelemetry();
 
             telemetry.update();
         }
@@ -386,6 +389,9 @@ public class AutoForRed extends LinearOpMode {
         if (visionPortal != null) {
             visionPortal.close();
         }
+
+        updateTelemetry();
+
     }
 
     private Path buildPathGPP_1() {
@@ -397,22 +403,19 @@ public class AutoForRed extends LinearOpMode {
     private Path buildPathGPP_2() {
         Path path = new Path(new BezierLine(SHOT_POS, COLLECT_POS_1));
         path.setLinearHeadingInterpolation(SHOT_POS.getHeading(), COLLECT_POS_1.getHeading());
-        moveRotorBigTickForward();
-        moveRotorSmallTickForward();
         return path;
     }
 
     private Path buildPathGPP_3() {
         Path path = new Path(new BezierLine(COLLECT_POS_1, COLLECT_POS_2));
         path.setLinearHeadingInterpolation(COLLECT_POS_1.getHeading(), COLLECT_POS_2.getHeading());
-        moveRotorBigTickForward();
         return path;
     }
 
     private Path buildPathGPP_4() {
         Path path = new Path(new BezierLine(COLLECT_POS_2, COLLECT_POS_3));
         path.setLinearHeadingInterpolation(COLLECT_POS_2.getHeading(), COLLECT_POS_3.getHeading());
-        moveRotorBigTickForward();
+        moveBigMovement();
         return path;
     }
 
@@ -425,19 +428,16 @@ public class AutoForRed extends LinearOpMode {
     private Path buildPathGPP_6() {
         Path path = new Path(new BezierLine(SHOT_POS, COLLECT_POS_4));
         path.setLinearHeadingInterpolation(SHOT_POS.getHeading(), COLLECT_POS_4.getHeading());
-        moveRotorSmallTickForward();
         return path;
     }
     private Path buildPathGPP_7() {
         Path path = new Path(new BezierLine(COLLECT_POS_4, COLLECT_POS_5));
         path.setLinearHeadingInterpolation(COLLECT_POS_4.getHeading(), COLLECT_POS_5.getHeading());
-        moveRotorBigTickForward();
         return path;
     }
     private Path buildPathGPP_8() {
         Path path = new Path(new BezierLine(COLLECT_POS_5, COLLECT_POS_6));
         path.setLinearHeadingInterpolation(COLLECT_POS_5.getHeading(), COLLECT_POS_6.getHeading());
-        moveRotorBigTickForward();
         return path;
     }
 
@@ -450,28 +450,25 @@ public class AutoForRed extends LinearOpMode {
     private Path buildPathGPP_10() {
         Path path = new Path(new BezierLine(SHOT_POS, COLLECT_POS_7));
         path.setLinearHeadingInterpolation(SHOT_POS.getHeading(), COLLECT_POS_7.getHeading());
-        moveRotorSmallTickForward();
+        moveRotor(true, false);
         return path;
     }
 
     private Path buildPathGPP_11() {
         Path path = new Path(new BezierLine(COLLECT_POS_7, COLLECT_POS_8));
         path.setLinearHeadingInterpolation(COLLECT_POS_7.getHeading(), COLLECT_POS_8.getHeading());
-        moveRotorBigTickForward();
         return path;
     }
 
     private Path buildPathGPP_12() {
         Path path = new Path(new BezierLine(COLLECT_POS_8, COLLECT_POS_9));
         path.setLinearHeadingInterpolation(COLLECT_POS_8.getHeading(), COLLECT_POS_9.getHeading());
-        moveRotorBigTickForward();
         return path;
     }
 
     private Path buildPathGPP_13() {
         Path path = new Path(new BezierLine(COLLECT_POS_9, SHOT_POS));
         path.setLinearHeadingInterpolation(COLLECT_POS_9.getHeading(), SHOT_POS.getHeading());
-        moveRotorBigTickForward();
         return path;
     }
 
@@ -548,13 +545,79 @@ public class AutoForRed extends LinearOpMode {
         }
     }
 
-    public void moveRotorSmallTickBackward() {
-        rotorPosition -= delta;
-        if (!rotor.isBusy()) {
+    public void moveBigMovement() {
+        moveRotor(true, false);
+        sleep(1000);
+        moveRotor(true, false);
+        sleep(1000);moveRotor(true, false);
+        sleep(1000);
+    }
+
+    public void moveRotor(boolean forwards, boolean backwards) {
+
+        boolean prevLeftBumper = false;
+        boolean prevRightBumper = false;
+
+        int rotorPosition;
+
+        boolean leftBumper, rightBumper;
+
+        rightBumper = forwards;
+        leftBumper = backwards;
+
+        prevRightBumper = rightBumper;
+        prevLeftBumper = leftBumper;
+
+        boolean rightBumperPressed = rightBumper && !prevRightBumper;
+        boolean leftBumperPressed = leftBumper && !prevLeftBumper;
+
+
+        rightBumper = gamepad2.right_bumper;
+        leftBumper = gamepad2.left_bumper;
+
+        rightBumperPressed = rightBumper && !prevRightBumper;
+        leftBumperPressed = leftBumper && !prevLeftBumper;
+
+        rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        if (rightBumperPressed) {
+            currentPresetIndex = (currentPresetIndex + 1) % ROTOR_PRESETS.length;
+        }
+        if (leftBumperPressed) {
+            currentPresetIndex = (currentPresetIndex - 1 + ROTOR_PRESETS.length) % ROTOR_PRESETS.length;
+        }
+
+        rotorPosition = ROTOR_PRESETS[currentPresetIndex];
+
+        rotor.setTargetPosition(rotorPosition);
+        rotor.setPower(0.7);
+
+        if (currentPresetIndex == 0) {
+            rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            currentPresetIndex = 1;
+            rotorPosition = ROTOR_PRESETS[currentPresetIndex];
             rotor.setTargetPosition(rotorPosition);
-            rotor.setPower(1);
             rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
+
+        double rotorManualPower = -gamepad2.right_stick_y * 0.3;
+
+        if (Math.abs(rotorManualPower) > 0.1) {
+            if (rotor.getMode() != DcMotor.RunMode.RUN_USING_ENCODER) {
+                rotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
+            rotor.setPower(rotorManualPower);
+        } else if (rotor.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
+            rotor.setTargetPosition(rotor.getCurrentPosition());
+            rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rotor.setPower(0.7);
+        }
+
+        prevRightBumper = rightBumper;
+        prevLeftBumper = leftBumper;
+
+
     }
 
     public void moveRotorBigTickForward() {
@@ -562,10 +625,6 @@ public class AutoForRed extends LinearOpMode {
         moveRotorSmallTickForward();
     }
 
-    public void moveRotorBigTickBackward() {
-        moveRotorSmallTickBackward();
-        moveRotorSmallTickBackward();
-    }
     private void setManualExposure(int exposureMS, int gain) {
         if (visionPortal == null) {
             return;
@@ -593,5 +652,24 @@ public class AutoForRed extends LinearOpMode {
                 gainControl.setGain(gain);
             }
         }
+
+
+    }
+
+    public void updateTelemetry() {
+        telemetry.addData("Current Preset Index", currentPresetIndex);
+        telemetry.addData("Rotor Mode", rotor.getMode());
+        telemetry.addData("Rotor Index", currentPresetIndex);
+        telemetry.addData("Rotor Current Position", rotor.getCurrentPosition());
+        telemetry.addData("Outtake Velocity", outtake.getVelocity());
+        telemetry.addData("Right Trigger", gamepad1.right_trigger);
+        telemetry.addData("Left Trigger", gamepad1.left_trigger);
+        telemetry.addData("Left Stick X", gamepad1.left_stick_x);
+        telemetry.addData("path state", pathState);
+        telemetry.addData("x", follower.getPose().getX());
+        telemetry.addData("y", follower.getPose().getY());
+        telemetry.addData("heading (deg)", Math.toDegrees(follower.getPose().getHeading()));
+        telemetry.addData("Door position", door.getPosition());
+        telemetry.update();
     }
 }
