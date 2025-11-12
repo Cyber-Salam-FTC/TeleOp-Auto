@@ -24,10 +24,15 @@ public class MainOp extends LinearOpMode {
     private DcMotor intake, rotor;
     private DcMotorEx outtake;
     private Servo door;
-//    private double outtakePower = 1;
+
+    private boolean prevLeftBumper = false;
+    private boolean prevRightBumper = false;
 
     private NormalizedColorSensor sensor;
     private String lastDetectedColor = "NONE";
+
+    private final int[] ROTOR_PRESETS = {0, 48, 96, 144, 192, 240, 288};
+    private int currentPresetIndex = 0;
 
     private enum RobotState {
         RIGHT_AND_FORWARD,
@@ -40,8 +45,7 @@ public class MainOp extends LinearOpMode {
     double forward, strafe, rotate;
 
     boolean leftBumper, rightBumper;
-    double iterations;
-    int delta, rotorPosition;
+    int rotorPosition;
     MecanumDrive drive = new MecanumDrive();
 
     @Override
@@ -61,8 +65,6 @@ public class MainOp extends LinearOpMode {
 
         door.setDirection(Servo.Direction.REVERSE);
 
-
-        rotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rotor.setDirection(DcMotor.Direction.REVERSE);
         rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -71,7 +73,6 @@ public class MainOp extends LinearOpMode {
         leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
 
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         leftRear.setDirection(DcMotor.Direction.REVERSE);
@@ -82,11 +83,6 @@ public class MainOp extends LinearOpMode {
 
         door.setPosition(0);
 
-        leftBumper = false;
-        rightBumper = false;
-
-        iterations = 0;
-        delta = 48;
         rotorPosition = 0;
 
         waitForStart();
@@ -99,15 +95,9 @@ public class MainOp extends LinearOpMode {
 
             drive.drive(forward, strafe, rotate);
 
-            telemetry.addData("Right Trigger Value", gamepad1.right_trigger);
-            telemetry.addData("Left Trigger Value", gamepad1.left_trigger);
-            telemetry.addData("Left Stick X Value", gamepad1.left_stick_x);
-
-
-            colorSense();
+            // colorSense();
 
             intake.setPower(1);
-
 
             if (gamepad2.triangle) {
                 outtake.setVelocity(0);
@@ -121,98 +111,123 @@ public class MainOp extends LinearOpMode {
                 door.setPosition(0.25);
             }
 
-            rightBumper = gamepad2.right_bumper;
-            leftBumper = gamepad2.left_bumper;
-
-            if (rightBumper && !rotor.isBusy()) {
-                rotorPosition += delta;
-            }
-            if (leftBumper & !rotor.isBusy()) {
-                rotorPosition -= delta;
-            }
-            if ((rightBumper || leftBumper) && !rotor.isBusy()) {
-                rotor.setTargetPosition(rotorPosition);
-                rotor.setPower(1);
-                rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            if (gamepad2.ps) {
+                intake.setPower(-1);
             }
 
-            iterations = 0;
-           while (rotor.isBusy() && iterations < 40) {
-               telemetry.addData("rotorPosition", rotorPosition);
-               telemetry.addData("Current rotor position", rotor.getCurrentPosition());
-               telemetry.addData("Iterations", iterations);
-               telemetry.update();
-               sleep(25);
-               iterations++;
-           }
-           if (gamepad2.right_stick_y > 0.2) {
-               rotor.setPower(gamepad2.right_stick_y);
-           }
-           if (gamepad2.left_stick_y > 0.2) {
-               rotor.setPower(gamepad2.left_stick_y);
-           }
+            if (gamepad2.dpad_left) {
+                intake.setPower(1);
+            }
 
-            if (gamepad1.dpad_up) {
+            if (gamepad2.dpad_up) {
                 outtake.setVelocity(2200);
             }
 
-            if (gamepad1.dpad_down) {
+            if (gamepad2.dpad_down) {
                 outtake.setVelocity(1800);
             }
 
-            rotor.setPower(gamepad2.right_stick_y * 0.3);
+            rightBumper = gamepad2.right_bumper;
+            leftBumper = gamepad2.left_bumper;
 
-            telemetry.addData("rightBumper", rightBumper);
-            telemetry.addData("Rotor Position", rotor.getCurrentPosition());
-            telemetry.addData("Rotor Target", rotor.getTargetPosition());
-            telemetry.addData("Outtake Power", outtake.getVelocity());
+            boolean rightBumperPressed = rightBumper && !prevRightBumper;
+            boolean leftBumperPressed = leftBumper && !prevLeftBumper;
 
-            telemetry.update();
-        }
-    }
+            if (rightBumperPressed || leftBumperPressed) {
+                if (rotor.getMode() != DcMotor.RunMode.RUN_TO_POSITION) {
+                    rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                }
 
-    public void colorSense() {
-        NormalizedRGBA colors = sensor.getNormalizedColors();
-        float[] hsvValues = new float[3];
-        Color.colorToHSV(colors.toColor(), hsvValues);
+                if (rightBumperPressed) {
+                    currentPresetIndex++;
+                }
+                if (leftBumperPressed) {
+                    currentPresetIndex--;
+                }
 
-        float hue = hsvValues[0];
+                currentPresetIndex = Math.max(0, Math.min(ROTOR_PRESETS.length - 1, currentPresetIndex));
+                rotorPosition = ROTOR_PRESETS[currentPresetIndex];
 
-        float red = (float)colors.red;
-        float green = (float)colors.green;
-        float blue = (float)colors.blue;
-
-        String currentDetectedColor = "UNKNOWN";
-
-        telemetry.addData("A", "%.3f", colors.alpha);
-        telemetry.addData("R", "%.3f", colors.red);
-        telemetry.addData("G", "%.3f", colors.green);
-        telemetry.addData("B", "%.3f", colors.blue);
-        telemetry.addData("HUE", "%.0f", hue);
-
-        if (hue >= 105 && hue < 190) {
-            currentDetectedColor = "GREEN";
-        } else if (hue >= 206 && hue < 320) {
-            currentDetectedColor = "PURPLE";
-        }
-
-        telemetry.addData("Detected Color", currentDetectedColor);
-
-        if (!currentDetectedColor.equals(lastDetectedColor)) {
-            if (currentDetectedColor.equals("GREEN")) {
-                gamepad1.setLedColor(0.0f, 1.0f, 0.0f, 3000);
-                gamepad2.setLedColor(0.0f, 1.0f, 0.0f, 3000);
-            } else if (currentDetectedColor.equals("PURPLE")) {
-                gamepad1.setLedColor(0.5f, 0.0f, 0.5f, 3000);
-                gamepad2.setLedColor(0.5f, 0.0f, 0.5f, 3000);
-            } else {
-                gamepad1.setLedColor(0.0f, 0.0f, 0.0f, 0);
-                gamepad2.setLedColor(0.0f, 0.0f, 0.0f, 0);
+                rotor.setTargetPosition(rotorPosition);
+                rotor.setPower(1.0);
             }
-            lastDetectedColor = currentDetectedColor;
+
+            double rotorManualPower = -gamepad2.right_stick_y * 0.3;
+
+            if (Math.abs(rotorManualPower) > 0.1) {
+                if (rotor.getMode() != DcMotor.RunMode.RUN_USING_ENCODER) {
+                    rotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                }
+                rotor.setPower(rotorManualPower);
+            } else if (rotor.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
+                rotor.setPower(0);
+            }
+
+            prevRightBumper = rightBumper;
+            prevLeftBumper = leftBumper;
+
+            if (rotor.getCurrentPosition() == 288) {
+                rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            }
+
+            updateTelemetry();
         }
     }
 
-
+    public void updateTelemetry() {
+        telemetry.addData("Current Preset Index", currentPresetIndex);
+        telemetry.addData("Right Bumper Pressed", rightBumper && !prevRightBumper);
+        telemetry.addData("Left Bumper Pressed", leftBumper && !prevLeftBumper);
+        telemetry.addData("Rotor Mode", rotor.getMode());
+        telemetry.addData("Rotor Target", rotorPosition);
+        telemetry.addData("Rotor Current Position", rotor.getCurrentPosition());
+        telemetry.addData("Outtake Velocity", outtake.getVelocity());
+        telemetry.addData("Right Trigger", gamepad1.right_trigger);
+        telemetry.addData("Left Trigger", gamepad1.left_trigger);
+        telemetry.addData("Left Stick X", gamepad1.left_stick_x);
+        telemetry.update();
+    }
+//    public void colorSense() {
+//        NormalizedRGBA colors = sensor.getNormalizedColors();
+//        float[] hsvValues = new float[3];
+//        Color.colorToHSV(colors.toColor(), hsvValues);
+//
+//        float hue = hsvValues[0];
+//
+//
+//        float red = (float)colors.red;
+//        float green = (float)colors.green;
+//        float blue = (float)colors.blue;
+//
+//        String currentDetectedColor = "UNKNOWN";
+//
+//        telemetry.addData("A", "%.3f", colors.alpha);
+//        telemetry.addData("R", "%.3f", colors.red);
+//        telemetry.addData("G", "%.3f", colors.green);
+//        telemetry.addData("B", "%.3f", colors.blue);
+//        telemetry.addData("HUE", "%.0f", hue);
+//
+//        if (hue >= 105 && hue < 190) {
+//            currentDetectedColor = "GREEN";
+//        } else if (hue >= 206 && hue < 320) {
+//            currentDetectedColor = "PURPLE";
+//        }
+//
+//        telemetry.addData("Detected Color", currentDetectedColor);
+//
+//        if (!currentDetectedColor.equals(lastDetectedColor)) {
+//            if (currentDetectedColor.equals("GREEN")) {
+//                gamepad1.setLedColor(0.0f, 1.0f, 0.0f, 3000);
+//                gamepad2.setLedColor(0.0f, 1.0f, 0.0f, 3000);
+//            } else if (currentDetectedColor.equals("PURPLE")) {
+//                gamepad1.setLedColor(0.5f, 0.0f, 0.5f, 3000);
+//                gamepad2.setLedColor(0.5f, 0.0f, 0.5f, 3000);
+//            } else {
+//                gamepad1.setLedColor(0.0f, 0.0f, 0.0f, 0);
+//                gamepad2.setLedColor(0.0f, 0.0f, 0.0f, 0);
+//            }
+//            lastDetectedColor = currentDetectedColor;
+//        }
+//    }
 
 }

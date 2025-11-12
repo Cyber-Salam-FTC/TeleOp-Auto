@@ -397,6 +397,7 @@ public class AutoForRed extends LinearOpMode {
     private Path buildPathGPP_2() {
         Path path = new Path(new BezierLine(SHOT_POS, COLLECT_POS_1));
         path.setLinearHeadingInterpolation(SHOT_POS.getHeading(), COLLECT_POS_1.getHeading());
+        moveRotorBigTickForward();
         moveRotorSmallTickForward();
         return path;
     }
