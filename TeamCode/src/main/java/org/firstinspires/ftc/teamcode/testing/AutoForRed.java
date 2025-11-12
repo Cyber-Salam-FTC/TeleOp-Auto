@@ -80,8 +80,10 @@ public class AutoForRed extends LinearOpMode {
                 sleep(500);
                 shootBall();
                 moveBigMovement();
+                sleep(1000);
                 shootBall();
                 moveBigMovement();
+                sleep(1000);
                 shootBall();
                 sleep(300);
                 follower.followPath(currentPath);
@@ -256,7 +258,7 @@ public class AutoForRed extends LinearOpMode {
     }
 
     final int[] ROTOR_PRESETS = {0, 48, 96, 144, 192, 240};
-    private final int DELTA = 48;
+    private final int DELTA = 30;
     private int currentRotorPosition = 0;
     int currentPresetIndex = 0;
 
@@ -534,8 +536,13 @@ public class AutoForRed extends LinearOpMode {
     }
 
     private void shootBall() {
-        door.setPosition(0.25);
+        door.setPosition(0);
+        while (rotor.isBusy()) {
+
+        }
         sleep(1000);
+        door.setPosition(0.25);
+        sleep(300);
         door.setPosition(0);
     }
 
@@ -552,8 +559,6 @@ public class AutoForRed extends LinearOpMode {
         moveRotor(true, false);
         sleep(1000);
         moveRotor(true, false);
-        sleep(1000);moveRotor(true, false);
-        sleep(1000);
     }
 
     public void moveRotor(boolean forwards, boolean backwards) {
