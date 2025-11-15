@@ -47,18 +47,21 @@ public class AutoForRed extends LinearOpMode {
 
     private final Pose startPose = new Pose(96, 9, Math.toRadians(90));
     private final Pose SHOT_POS_1 = new Pose(96, 50, Math.toRadians(90));
-    private final Pose SHOT_POS = new Pose(95, 96, Math.toRadians(225));
+    private final Pose SHOT_POS = new Pose(100, 92, Math.toRadians(225));
     private final Pose SHOT_POS_3 = new Pose(110, 83.5, Math.toRadians(0));
 
-    private final Pose COLLECT_POS_1 = new Pose(117, 84, Math.toRadians(0));
-    private final Pose COLLECT_POS_2 = new Pose(122, 84, Math.toRadians(0));
-    private final Pose COLLECT_POS_3 = new Pose(134, 84, Math.toRadians(0));
-    private final Pose COLLECT_POS_4 = new Pose(117, 60, Math.toRadians(0));
-    private final Pose COLLECT_POS_5 = new Pose(122, 60, Math.toRadians(0));
-    private final Pose COLLECT_POS_6 = new Pose(134, 60, Math.toRadians(0));
-    private final Pose COLLECT_POS_7 = new Pose(117, 36, Math.toRadians(0));
-    private final Pose COLLECT_POS_8 = new Pose(122, 36, Math.toRadians(0));
-    private final Pose COLLECT_POS_9 = new Pose(134, 36, Math.toRadians(0));
+    private final Pose MIDPOINT = new Pose(90, 90, Math.toRadians(0));
+    private final Pose PARK = new Pose(120,488, Math.toRadians(0));
+
+    private final Pose COLLECT_POS_1 = new Pose(105, 90, Math.toRadians(0));
+    private final Pose COLLECT_POS_2 = new Pose(112, 90, Math.toRadians(0));
+    private final Pose COLLECT_POS_3 = new Pose(117, 90, Math.toRadians(0));
+    private final Pose COLLECT_POS_4 = new Pose(105, 72, Math.toRadians(0));
+    private final Pose COLLECT_POS_5 = new Pose(112, 72, Math.toRadians(0));
+    private final Pose COLLECT_POS_6 = new Pose(117, 72, Math.toRadians(0));
+    private final Pose COLLECT_POS_7 = new Pose(105, 48, Math.toRadians(0));
+    private final Pose COLLECT_POS_8 = new Pose(112, 48, Math.toRadians(0));
+    private final Pose COLLECT_POS_9 = new Pose(117, 48, Math.toRadians(0));
     private final Pose PARK_POS = new Pose(105, 33, Math.toRadians(0));
 
     public void stateMachine() {
@@ -79,13 +82,13 @@ public class AutoForRed extends LinearOpMode {
                 }
                 sleep(500);
                 shootBall();
-                moveBigMovement();
-                sleep(1000);
+                sleep(2000);
                 shootBall();
+                sleep(2000);
                 moveBigMovement();
-                sleep(1000);
+                sleep(2000);
                 shootBall();
-                sleep(300);
+//                sleep(300);
                 follower.followPath(currentPath);
                 pathState++;
                 break;
@@ -97,7 +100,7 @@ public class AutoForRed extends LinearOpMode {
                 } else if (foundID == PPG_TAG_ID) {
                     currentPath = buildPathGPP_2();
                 }
-                sleep(2500);
+//                sleep(300);
                 follower.followPath(currentPath);
                 pathState++;
                 break;
@@ -109,9 +112,9 @@ public class AutoForRed extends LinearOpMode {
                 } else if (foundID == PPG_TAG_ID) {
                     currentPath = buildPathGPP_3();
                 }
-                sleep(2500);
+                sleep(1000);
                 follower.followPath(currentPath);
-                pathState++;
+                pathState = 17;
                 break;
             case 4:
                 if (foundID == GPP_TAG_ID) {
@@ -121,7 +124,7 @@ public class AutoForRed extends LinearOpMode {
                 } else if (foundID == PPG_TAG_ID) {
                     currentPath = buildPathGPP_4();
                 }
-                sleep(2500);
+                sleep(1000);
                 follower.followPath(currentPath);
                 pathState++;
                 break;
@@ -133,8 +136,7 @@ public class AutoForRed extends LinearOpMode {
                 } else if (foundID == PPG_TAG_ID) {
                     currentPath = buildPathGPP_5();
                 }
-                shootBall();
-                sleep(2000);
+                sleep(1000);
                 follower.followPath(currentPath);
                 pathState++;
                 break;
@@ -146,6 +148,7 @@ public class AutoForRed extends LinearOpMode {
                 } else if (foundID == PPG_TAG_ID) {
                     currentPath = buildPathGPP_6();
                 }
+                shootBall();
                 sleep(2500);
                 follower.followPath(currentPath);
                 pathState++;
@@ -182,7 +185,6 @@ public class AutoForRed extends LinearOpMode {
                 } else if (foundID == PPG_TAG_ID) {
                     currentPath = buildPathGPP_9();
                 }
-                shootBall();
                 sleep(2000);
                 follower.followPath(currentPath);
                 pathState++;
@@ -195,6 +197,7 @@ public class AutoForRed extends LinearOpMode {
                 } else if (foundID == PPG_TAG_ID) {
                     currentPath = buildPathGPP_10();
                 }
+                shootBall();
                 sleep(2500);
                 follower.followPath(currentPath);
                 pathState++;
@@ -231,7 +234,6 @@ public class AutoForRed extends LinearOpMode {
                 } else if (foundID == PPG_TAG_ID) {
                     currentPath = buildPathGPP_13();
                 }
-                shootBall();
                 sleep(2000);
                 follower.followPath(currentPath);
                 pathState++;
@@ -245,10 +247,23 @@ public class AutoForRed extends LinearOpMode {
                     currentPath = buildPathGPP_14();
                 }
                 sleep(2500);
+                shootBall();
                 follower.followPath(currentPath);
                 pathState++;
                 break;
             case 15:
+                if (foundID == GPP_TAG_ID) {
+                    currentPath = buildPathGPP_15();
+                } else if (foundID == PGP_TAG_ID) {
+                    currentPath = buildPathGPP_15();
+                } else if (foundID == PPG_TAG_ID) {
+                    currentPath = buildPathGPP_15();
+                }
+                sleep(2500);
+                follower.followPath(currentPath);
+                pathState++;
+                break;
+            case 16:
                 pathState++;
                 break;
             default:
@@ -258,7 +273,7 @@ public class AutoForRed extends LinearOpMode {
     }
 
     final int[] ROTOR_PRESETS = {0, 48, 96, 144, 192, 240};
-    private final int DELTA = 30;
+    private final int DELTA = 48;
     private int currentRotorPosition = 0;
     int currentPresetIndex = 0;
 
@@ -406,78 +421,84 @@ public class AutoForRed extends LinearOpMode {
     }
 
     private Path buildPathGPP_2() {
-        Path path = new Path(new BezierLine(SHOT_POS, COLLECT_POS_1));
-        path.setLinearHeadingInterpolation(SHOT_POS.getHeading(), COLLECT_POS_1.getHeading());
+        Path path = new Path(new BezierLine(SHOT_POS, MIDPOINT));
+        path.setLinearHeadingInterpolation(SHOT_POS.getHeading(), MIDPOINT.getHeading());
         return path;
     }
 
     private Path buildPathGPP_3() {
+        Path path = new Path(new BezierLine(MIDPOINT, PARK));
+        path.setLinearHeadingInterpolation(MIDPOINT.getHeading(), PARK.getHeading());
+        return path;
+    }
+
+    private Path buildPathGPP_4() {
         Path path = new Path(new BezierLine(COLLECT_POS_1, COLLECT_POS_2));
         path.setLinearHeadingInterpolation(COLLECT_POS_1.getHeading(), COLLECT_POS_2.getHeading());
         return path;
     }
 
-    private Path buildPathGPP_4() {
+    private Path buildPathGPP_5() {
         Path path = new Path(new BezierLine(COLLECT_POS_2, COLLECT_POS_3));
         path.setLinearHeadingInterpolation(COLLECT_POS_2.getHeading(), COLLECT_POS_3.getHeading());
         moveBigMovement();
         return path;
     }
 
-    private Path buildPathGPP_5() {
+    private Path buildPathGPP_6() {
         Path path = new Path(new BezierLine(COLLECT_POS_3, SHOT_POS));
         path.setLinearHeadingInterpolation(COLLECT_POS_3.getHeading(), SHOT_POS.getHeading());
         return path;
     }
 
-    private Path buildPathGPP_6() {
+    private Path buildPathGPP_7() {
         Path path = new Path(new BezierLine(SHOT_POS, COLLECT_POS_4));
         path.setLinearHeadingInterpolation(SHOT_POS.getHeading(), COLLECT_POS_4.getHeading());
         return path;
     }
-    private Path buildPathGPP_7() {
+    private Path buildPathGPP_8() {
         Path path = new Path(new BezierLine(COLLECT_POS_4, COLLECT_POS_5));
         path.setLinearHeadingInterpolation(COLLECT_POS_4.getHeading(), COLLECT_POS_5.getHeading());
         return path;
     }
-    private Path buildPathGPP_8() {
+    private Path buildPathGPP_9() {
         Path path = new Path(new BezierLine(COLLECT_POS_5, COLLECT_POS_6));
         path.setLinearHeadingInterpolation(COLLECT_POS_5.getHeading(), COLLECT_POS_6.getHeading());
         return path;
     }
 
-    private Path buildPathGPP_9() {
+    private Path buildPathGPP_10() {
         Path path = new Path(new BezierLine(COLLECT_POS_6, SHOT_POS));
         path.setLinearHeadingInterpolation(COLLECT_POS_6.getHeading(), SHOT_POS.getHeading());
         return path;
     }
 
-    private Path buildPathGPP_10() {
+    private Path buildPathGPP_11() {
         Path path = new Path(new BezierLine(SHOT_POS, COLLECT_POS_7));
         path.setLinearHeadingInterpolation(SHOT_POS.getHeading(), COLLECT_POS_7.getHeading());
         moveRotor(true, false);
         return path;
     }
 
-    private Path buildPathGPP_11() {
+    private Path buildPathGPP_12() {
         Path path = new Path(new BezierLine(COLLECT_POS_7, COLLECT_POS_8));
         path.setLinearHeadingInterpolation(COLLECT_POS_7.getHeading(), COLLECT_POS_8.getHeading());
         return path;
     }
 
-    private Path buildPathGPP_12() {
+    private Path buildPathGPP_13() {
         Path path = new Path(new BezierLine(COLLECT_POS_8, COLLECT_POS_9));
         path.setLinearHeadingInterpolation(COLLECT_POS_8.getHeading(), COLLECT_POS_9.getHeading());
         return path;
     }
 
-    private Path buildPathGPP_13() {
+    private Path buildPathGPP_14() {
         Path path = new Path(new BezierLine(COLLECT_POS_9, SHOT_POS));
         path.setLinearHeadingInterpolation(COLLECT_POS_9.getHeading(), SHOT_POS.getHeading());
         return path;
     }
 
-    private Path buildPathGPP_14() {
+    private Path buildPathGPP_15() {
         Path path = new Path(new BezierLine(SHOT_POS, PARK_POS));
         path.setLinearHeadingInterpolation(SHOT_POS.getHeading(), PARK_POS.getHeading());
         return path;
@@ -557,7 +578,7 @@ public class AutoForRed extends LinearOpMode {
 
     public void moveBigMovement() {
         moveRotor(true, false);
-        sleep(1000);
+//        sleep(00);
         moveRotor(true, false);
     }
 

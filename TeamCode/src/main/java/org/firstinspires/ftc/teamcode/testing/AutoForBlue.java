@@ -37,33 +37,37 @@ public class AutoForBlue extends LinearOpMode {
 
     private int foundID = 0;
 
-    private static final int PPG_TAG_ID = 26;
-    private static final int PGP_TAG_ID = 27;
-    private static final int GPP_TAG_ID = 28;
+    private static final int PPG_TAG_ID = 23;
+    private static final int PGP_TAG_ID = 22;
+    private static final int GPP_TAG_ID = 21;
     private static final boolean USE_WEBCAM = true;
     private VisionPortal visionPortal = null;
     private AprilTagProcessor aprilTag;
     private AprilTagDetection desiredTag = null;
 
     private final Pose startPose = new Pose(48, 9, Math.toRadians(90));
-    private final Pose SHOT_POS_1 = new Pose(96, 94, Math.toRadians(270));
-    private final Pose SHOT_POS = new Pose(48, 96, Math.toRadians(315));
-    private final Pose SHOT_POS_3 = new Pose(110, 60.5, Math.toRadians(0));
+    private final Pose SHOT_POS_1 = new Pose(96, 50, Math.toRadians(90));
+    private final Pose SHOT_POS = new Pose(44, 92, Math.toRadians(310));
+    private final Pose SHOT_POS_3 = new Pose(110, 83.5, Math.toRadians(0));
 
-    private final Pose COLLECT_POS_1 = new Pose(40, 85, Math.toRadians(180));
-    private final Pose COLLECT_POS_2 = new Pose(34, 85, Math.toRadians(180));
-    private final Pose COLLECT_POS_3 = new Pose(28, 85, Math.toRadians(180));
-    private final Pose COLLECT_POS_4 = new Pose(40, 60, Math.toRadians(180));
-    private final Pose COLLECT_POS_5 = new Pose(34, 60, Math.toRadians(180));
-    private final Pose COLLECT_POS_6 = new Pose(28, 60, Math.toRadians(180));
-    private final Pose COLLECT_POS_7 = new Pose(40, 35, Math.toRadians(180));
-    private final Pose COLLECT_POS_8 = new Pose(34, 35, Math.toRadians(180));
-    private final Pose COLLECT_POS_9 = new Pose(28, 35, Math.toRadians(180));
-    private final Pose PARK_POS = new Pose(38.5, 33.5, Math.toRadians(0));
+    private final Pose MIDPOINT = new Pose(54, 90, Math.toRadians(0));
+    private final Pose PARK = new Pose(48,40, Math.toRadians(0));
+
+    private final Pose COLLECT_POS_1 = new Pose(105, 90, Math.toRadians(0));
+    private final Pose COLLECT_POS_2 = new Pose(112, 90, Math.toRadians(0));
+    private final Pose COLLECT_POS_3 = new Pose(117, 90, Math.toRadians(0));
+    private final Pose COLLECT_POS_4 = new Pose(105, 72, Math.toRadians(0));
+    private final Pose COLLECT_POS_5 = new Pose(112, 72, Math.toRadians(0));
+    private final Pose COLLECT_POS_6 = new Pose(117, 72, Math.toRadians(0));
+    private final Pose COLLECT_POS_7 = new Pose(105, 48, Math.toRadians(0));
+    private final Pose COLLECT_POS_8 = new Pose(112, 48, Math.toRadians(0));
+    private final Pose COLLECT_POS_9 = new Pose(117, 48, Math.toRadians(0));
+    private final Pose PARK_POS = new Pose(105, 33, Math.toRadians(0));
 
     public void stateMachine() {
         switch (pathState) {
             case 0:
+                door.setPosition(0);
                 runShooterMechanism();
                 follower.followPath(currentPath);
                 pathState++;
@@ -76,7 +80,15 @@ public class AutoForBlue extends LinearOpMode {
                 } else if (foundID == PPG_TAG_ID) {
                     currentPath = buildPathGPP_1();
                 }
+                sleep(500);
                 shootBall();
+                sleep(2000);
+                shootBall();
+                sleep(2000);
+                moveBigMovement();
+                sleep(2000);
+                shootBall();
+//                sleep(300);
                 follower.followPath(currentPath);
                 pathState++;
                 break;
@@ -88,6 +100,7 @@ public class AutoForBlue extends LinearOpMode {
                 } else if (foundID == PPG_TAG_ID) {
                     currentPath = buildPathGPP_2();
                 }
+//                sleep(300);
                 follower.followPath(currentPath);
                 pathState++;
                 break;
@@ -99,8 +112,9 @@ public class AutoForBlue extends LinearOpMode {
                 } else if (foundID == PPG_TAG_ID) {
                     currentPath = buildPathGPP_3();
                 }
+                sleep(1000);
                 follower.followPath(currentPath);
-                pathState++;
+                pathState = 17;
                 break;
             case 4:
                 if (foundID == GPP_TAG_ID) {
@@ -110,6 +124,7 @@ public class AutoForBlue extends LinearOpMode {
                 } else if (foundID == PPG_TAG_ID) {
                     currentPath = buildPathGPP_4();
                 }
+                sleep(1000);
                 follower.followPath(currentPath);
                 pathState++;
                 break;
@@ -121,7 +136,7 @@ public class AutoForBlue extends LinearOpMode {
                 } else if (foundID == PPG_TAG_ID) {
                     currentPath = buildPathGPP_5();
                 }
-                shootBall();
+                sleep(1000);
                 follower.followPath(currentPath);
                 pathState++;
                 break;
@@ -133,6 +148,8 @@ public class AutoForBlue extends LinearOpMode {
                 } else if (foundID == PPG_TAG_ID) {
                     currentPath = buildPathGPP_6();
                 }
+                shootBall();
+                sleep(2500);
                 follower.followPath(currentPath);
                 pathState++;
                 break;
@@ -144,6 +161,7 @@ public class AutoForBlue extends LinearOpMode {
                 } else if (foundID == PPG_TAG_ID) {
                     currentPath = buildPathGPP_7();
                 }
+                sleep(2500);
                 follower.followPath(currentPath);
                 pathState++;
                 break;
@@ -155,6 +173,7 @@ public class AutoForBlue extends LinearOpMode {
                 } else if (foundID == PPG_TAG_ID) {
                     currentPath = buildPathGPP_8();
                 }
+                sleep(2500);
                 follower.followPath(currentPath);
                 pathState++;
                 break;
@@ -166,7 +185,7 @@ public class AutoForBlue extends LinearOpMode {
                 } else if (foundID == PPG_TAG_ID) {
                     currentPath = buildPathGPP_9();
                 }
-                shootBall();
+                sleep(2000);
                 follower.followPath(currentPath);
                 pathState++;
                 break;
@@ -178,7 +197,8 @@ public class AutoForBlue extends LinearOpMode {
                 } else if (foundID == PPG_TAG_ID) {
                     currentPath = buildPathGPP_10();
                 }
-
+                shootBall();
+                sleep(2500);
                 follower.followPath(currentPath);
                 pathState++;
                 break;
@@ -190,6 +210,7 @@ public class AutoForBlue extends LinearOpMode {
                 } else if (foundID == PPG_TAG_ID) {
                     currentPath = buildPathGPP_11();
                 }
+                sleep(2500);
                 follower.followPath(currentPath);
                 pathState++;
                 break;
@@ -201,6 +222,7 @@ public class AutoForBlue extends LinearOpMode {
                 } else if (foundID == PPG_TAG_ID) {
                     currentPath = buildPathGPP_12();
                 }
+                sleep(2500);
                 follower.followPath(currentPath);
                 pathState++;
                 break;
@@ -212,7 +234,7 @@ public class AutoForBlue extends LinearOpMode {
                 } else if (foundID == PPG_TAG_ID) {
                     currentPath = buildPathGPP_13();
                 }
-                shootBall();
+                sleep(2000);
                 follower.followPath(currentPath);
                 pathState++;
                 break;
@@ -224,10 +246,24 @@ public class AutoForBlue extends LinearOpMode {
                 } else if (foundID == PPG_TAG_ID) {
                     currentPath = buildPathGPP_14();
                 }
+                sleep(2500);
+                shootBall();
                 follower.followPath(currentPath);
                 pathState++;
                 break;
             case 15:
+                if (foundID == GPP_TAG_ID) {
+                    currentPath = buildPathGPP_15();
+                } else if (foundID == PGP_TAG_ID) {
+                    currentPath = buildPathGPP_15();
+                } else if (foundID == PPG_TAG_ID) {
+                    currentPath = buildPathGPP_15();
+                }
+                sleep(2500);
+                follower.followPath(currentPath);
+                pathState++;
+                break;
+            case 16:
                 pathState++;
                 break;
             default:
@@ -236,10 +272,17 @@ public class AutoForBlue extends LinearOpMode {
         }
     }
 
+    final int[] ROTOR_PRESETS = {0, 48, 96, 144, 192, 240};
+    private final int DELTA = 48;
+    private int currentRotorPosition = 0;
+    int currentPresetIndex = 0;
+
     public void runOpMode() {
         boolean targetFound = false;
 
         delta = 48;
+
+
 
         leftFront = hardwareMap.get(DcMotor.class, "leftFront");
         leftRear = hardwareMap.get(DcMotor.class, "leftRear");
@@ -261,10 +304,15 @@ public class AutoForBlue extends LinearOpMode {
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(startPose);
 
-        rotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rotor.setDirection(DcMotor.Direction.REVERSE);
         rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rotor.setTargetPosition(0);
+        rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        door.setDirection(Servo.Direction.REVERSE);
+
+        outtake.setDirection(DcMotorSimple.Direction.REVERSE);
 
         intake = hardwareMap.get(DcMotor.class, "intake");
 
@@ -334,127 +382,125 @@ public class AutoForBlue extends LinearOpMode {
             foundID = GPP_TAG_ID;
         }
 
+        runShooterMechanism();
         stateMachine();
 
         while (opModeIsActive()) {
             intake.setPower(1);
+            outtake.setVelocity(1800);
 
             follower.update();
 
 
-            if (pathState > 0 && pathState < 5) {
+            if (pathState > 0 && pathState < 15) {
                 if (!follower.isBusy()) {
                     stateMachine();
+
                 }
             } else if (pathState >= 5) {
                 break;
             }
 
-            telemetry.addData("path state", pathState);
-            telemetry.addData("x", follower.getPose().getX());
-            telemetry.addData("y", follower.getPose().getY());
-            telemetry.addData("heading (deg)", Math.toDegrees(follower.getPose().getHeading()));
+            updateTelemetry();
+
             telemetry.update();
         }
 
         if (visionPortal != null) {
             visionPortal.close();
         }
+
+        updateTelemetry();
+
     }
 
     private Path buildPathGPP_1() {
         Path path = new Path(new BezierLine(startPose, SHOT_POS));
         path.setLinearHeadingInterpolation(startPose.getHeading(), SHOT_POS.getHeading());
-        shootBall();
         return path;
     }
 
     private Path buildPathGPP_2() {
-        Path path = new Path(new BezierLine(SHOT_POS, COLLECT_POS_1));
-        path.setLinearHeadingInterpolation(SHOT_POS.getHeading(), COLLECT_POS_1.getHeading());
-        moveRotorSmallTickForward();
+        Path path = new Path(new BezierLine(SHOT_POS, MIDPOINT));
+        path.setLinearHeadingInterpolation(SHOT_POS.getHeading(), MIDPOINT.getHeading());
         return path;
     }
 
     private Path buildPathGPP_3() {
-        Path path = new Path(new BezierLine(COLLECT_POS_1, COLLECT_POS_2));
-        path.setLinearHeadingInterpolation(COLLECT_POS_1.getHeading(), COLLECT_POS_2.getHeading());
-        moveRotorBigTickForward();
+        Path path = new Path(new BezierLine(MIDPOINT, PARK));
+        path.setLinearHeadingInterpolation(MIDPOINT.getHeading(), PARK.getHeading());
         return path;
     }
 
     private Path buildPathGPP_4() {
-        Path path = new Path(new BezierLine(COLLECT_POS_2, COLLECT_POS_3));
-        path.setLinearHeadingInterpolation(COLLECT_POS_2.getHeading(), COLLECT_POS_3.getHeading());
-        moveRotorBigTickForward();
+        Path path = new Path(new BezierLine(COLLECT_POS_1, COLLECT_POS_2));
+        path.setLinearHeadingInterpolation(COLLECT_POS_1.getHeading(), COLLECT_POS_2.getHeading());
         return path;
     }
 
     private Path buildPathGPP_5() {
-        Path path = new Path(new BezierLine(COLLECT_POS_3, SHOT_POS));
-        path.setLinearHeadingInterpolation(COLLECT_POS_3.getHeading(), SHOT_POS.getHeading());
-        shootBall();
+        Path path = new Path(new BezierLine(COLLECT_POS_2, COLLECT_POS_3));
+        path.setLinearHeadingInterpolation(COLLECT_POS_2.getHeading(), COLLECT_POS_3.getHeading());
+        moveBigMovement();
         return path;
     }
 
     private Path buildPathGPP_6() {
-        Path path = new Path(new BezierLine(SHOT_POS, COLLECT_POS_4));
-        path.setLinearHeadingInterpolation(SHOT_POS.getHeading(), COLLECT_POS_4.getHeading());
-        moveRotorSmallTickForward();
-        return path;
-    }
-    private Path buildPathGPP_7() {
-        Path path = new Path(new BezierLine(COLLECT_POS_4, COLLECT_POS_5));
-        path.setLinearHeadingInterpolation(COLLECT_POS_4.getHeading(), COLLECT_POS_5.getHeading());
-        moveRotorBigTickForward();
-        return path;
-    }
-    private Path buildPathGPP_8() {
-        Path path = new Path(new BezierLine(COLLECT_POS_5, COLLECT_POS_6));
-        path.setLinearHeadingInterpolation(COLLECT_POS_5.getHeading(), COLLECT_POS_6.getHeading());
-        moveRotorBigTickForward();
+        Path path = new Path(new BezierLine(COLLECT_POS_3, SHOT_POS));
+        path.setLinearHeadingInterpolation(COLLECT_POS_3.getHeading(), SHOT_POS.getHeading());
         return path;
     }
 
+    private Path buildPathGPP_7() {
+        Path path = new Path(new BezierLine(SHOT_POS, COLLECT_POS_4));
+        path.setLinearHeadingInterpolation(SHOT_POS.getHeading(), COLLECT_POS_4.getHeading());
+        return path;
+    }
+    private Path buildPathGPP_8() {
+        Path path = new Path(new BezierLine(COLLECT_POS_4, COLLECT_POS_5));
+        path.setLinearHeadingInterpolation(COLLECT_POS_4.getHeading(), COLLECT_POS_5.getHeading());
+        return path;
+    }
     private Path buildPathGPP_9() {
-        Path path = new Path(new BezierLine(COLLECT_POS_6, SHOT_POS));
-        path.setLinearHeadingInterpolation(COLLECT_POS_6.getHeading(), SHOT_POS.getHeading());
-        shootBall();
+        Path path = new Path(new BezierLine(COLLECT_POS_5, COLLECT_POS_6));
+        path.setLinearHeadingInterpolation(COLLECT_POS_5.getHeading(), COLLECT_POS_6.getHeading());
         return path;
     }
 
     private Path buildPathGPP_10() {
-        Path path = new Path(new BezierLine(SHOT_POS, COLLECT_POS_7));
-        path.setLinearHeadingInterpolation(SHOT_POS.getHeading(), COLLECT_POS_7.getHeading());
-        moveRotorSmallTickForward();
+        Path path = new Path(new BezierLine(COLLECT_POS_6, SHOT_POS));
+        path.setLinearHeadingInterpolation(COLLECT_POS_6.getHeading(), SHOT_POS.getHeading());
         return path;
     }
 
     private Path buildPathGPP_11() {
-        Path path = new Path(new BezierLine(COLLECT_POS_7, COLLECT_POS_8));
-        path.setLinearHeadingInterpolation(COLLECT_POS_7.getHeading(), COLLECT_POS_8.getHeading());
-        moveRotorBigTickForward();
+        Path path = new Path(new BezierLine(SHOT_POS, COLLECT_POS_7));
+        path.setLinearHeadingInterpolation(SHOT_POS.getHeading(), COLLECT_POS_7.getHeading());
+        moveRotor(true, false);
         return path;
     }
 
     private Path buildPathGPP_12() {
-        Path path = new Path(new BezierLine(COLLECT_POS_8, COLLECT_POS_9));
-        path.setLinearHeadingInterpolation(COLLECT_POS_8.getHeading(), COLLECT_POS_9.getHeading());
-        moveRotorBigTickForward();
+        Path path = new Path(new BezierLine(COLLECT_POS_7, COLLECT_POS_8));
+        path.setLinearHeadingInterpolation(COLLECT_POS_7.getHeading(), COLLECT_POS_8.getHeading());
         return path;
     }
 
     private Path buildPathGPP_13() {
-        Path path = new Path(new BezierLine(COLLECT_POS_9, SHOT_POS));
-        path.setLinearHeadingInterpolation(COLLECT_POS_9.getHeading(), SHOT_POS.getHeading());
-        moveRotorBigTickForward();
+        Path path = new Path(new BezierLine(COLLECT_POS_8, COLLECT_POS_9));
+        path.setLinearHeadingInterpolation(COLLECT_POS_8.getHeading(), COLLECT_POS_9.getHeading());
         return path;
     }
 
     private Path buildPathGPP_14() {
+        Path path = new Path(new BezierLine(COLLECT_POS_9, SHOT_POS));
+        path.setLinearHeadingInterpolation(COLLECT_POS_9.getHeading(), SHOT_POS.getHeading());
+        return path;
+    }
+
+    private Path buildPathGPP_15() {
         Path path = new Path(new BezierLine(SHOT_POS, PARK_POS));
         path.setLinearHeadingInterpolation(SHOT_POS.getHeading(), PARK_POS.getHeading());
-        shootBall();
         return path;
     }
 
@@ -507,14 +553,18 @@ public class AutoForBlue extends LinearOpMode {
     }
 
     private void runShooterMechanism() {
-        outtake.setVelocity(1800);
+        outtake.setVelocity(1500);
     }
 
     private void shootBall() {
-        for (double i = 0; i < 4; i++) {
-            door.setPosition(0.15);
-            door.setPosition(0);
+        door.setPosition(0);
+        while (rotor.isBusy()) {
+
         }
+        sleep(1000);
+        door.setPosition(0.25);
+        sleep(300);
+        door.setPosition(0);
     }
 
     public void moveRotorSmallTickForward() {
@@ -526,13 +576,91 @@ public class AutoForBlue extends LinearOpMode {
         }
     }
 
-    public void moveRotorSmallTickBackward() {
-        rotorPosition -= delta;
-        if (!rotor.isBusy()) {
-            rotor.setTargetPosition(rotorPosition);
-            rotor.setPower(1);
-            rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    public void moveBigMovement() {
+        moveRotor(true, false);
+//        sleep(00);
+        moveRotor(true, false);
+    }
+
+    public void moveRotor(boolean forwards, boolean backwards) {
+
+        if (forwards || backwards) {
+
+            if (forwards) {
+                currentRotorPosition += DELTA;
+            }
+            if (backwards) {
+                currentRotorPosition -= DELTA;
+            }
+
+            rotor.setTargetPosition(currentRotorPosition);
+            rotor.setPower(0.7);
         }
+//        boolean prevLeftBumper = false;
+//        boolean prevRightBumper = false;
+//
+//        int rotorPosition;
+//
+//        boolean leftBumper, rightBumper;
+//
+//        rightBumper = forwards;
+//        leftBumper = backwards;
+//
+//        prevRightBumper = rightBumper;
+//        prevLeftBumper = leftBumper;
+//
+
+
+//        boolean forwards = rightBumper && !prevRightBumper;
+//        boolean backwards = leftBumper && !prevLeftBumper;
+//
+//
+//        rightBumper = gamepad2.right_bumper;
+//        leftBumper = gamepad2.left_bumper;
+//
+//        forwards = rightBumper && !prevRightBumper;
+//        backwards = leftBumper && !prevLeftBumper;
+//
+//        rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//        if (forwards) {
+//            currentPresetIndex = (currentPresetIndex + 1) % ROTOR_PRESETS.length;
+//        }
+//        if (backwards) {
+//            currentPresetIndex = (currentPresetIndex - 1 + ROTOR_PRESETS.length) % ROTOR_PRESETS.length;
+//        }
+//
+//        rotorPosition = ROTOR_PRESETS[currentPresetIndex];
+//
+//        rotor.setTargetPosition(rotorPosition);
+//        rotor.setPower(0.7);
+//
+//        if (currentPresetIndex == 0) {
+//            rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            rotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            currentPresetIndex = 1;
+//            rotorPosition = ROTOR_PRESETS[currentPresetIndex];
+//            rotor.setTargetPosition(rotorPosition);
+//            rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        }
+//
+//        double rotorManualPower = -gamepad2.right_stick_y * 0.3;
+//
+//        if (Math.abs(rotorManualPower) > 0.1) {
+//            if (rotor.getMode() != DcMotor.RunMode.RUN_USING_ENCODER) {
+//                rotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            }
+//            rotor.setPower(rotorManualPower);
+//        } else if (rotor.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
+//            rotor.setTargetPosition(rotor.getCurrentPosition());
+//            rotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            rotor.setPower(0.7);
+//        }
+//
+//        prevRightBumper = rightBumper;
+//        prevLeftBumper = leftBumper;
+
+
     }
 
     public void moveRotorBigTickForward() {
@@ -540,10 +668,6 @@ public class AutoForBlue extends LinearOpMode {
         moveRotorSmallTickForward();
     }
 
-    public void moveRotorBigTickBackward() {
-        moveRotorSmallTickBackward();
-        moveRotorSmallTickBackward();
-    }
     private void setManualExposure(int exposureMS, int gain) {
         if (visionPortal == null) {
             return;
@@ -571,5 +695,24 @@ public class AutoForBlue extends LinearOpMode {
                 gainControl.setGain(gain);
             }
         }
+
+
+    }
+
+    public void updateTelemetry() {
+        telemetry.addData("Current Preset Index", currentPresetIndex);
+        telemetry.addData("Rotor Mode", rotor.getMode());
+        telemetry.addData("Rotor Index", currentPresetIndex);
+        telemetry.addData("Rotor Current Position", rotor.getCurrentPosition());
+        telemetry.addData("Outtake Velocity", outtake.getVelocity());
+        telemetry.addData("Right Trigger", gamepad1.right_trigger);
+        telemetry.addData("Left Trigger", gamepad1.left_trigger);
+        telemetry.addData("Left Stick X", gamepad1.left_stick_x);
+        telemetry.addData("path state", pathState);
+        telemetry.addData("x", follower.getPose().getX());
+        telemetry.addData("y", follower.getPose().getY());
+        telemetry.addData("heading (deg)", Math.toDegrees(follower.getPose().getHeading()));
+        telemetry.addData("Door position", door.getPosition());
+        telemetry.update();
     }
 }
