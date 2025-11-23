@@ -126,8 +126,12 @@ public class MainOp extends LinearOpMode {
                 intake.setPower(1);
             }
 
+            if (gamepad2.dpad_right) {
+                outtake.setVelocity(2500);
+            }
+
             if (gamepad2.dpad_up) {
-                outtake.setVelocity(2200);
+                outtake.setVelocity(1600);
             }
 
             if (gamepad2.dpad_down) {

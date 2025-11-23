@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -51,7 +50,7 @@ public class AutoForBlue extends LinearOpMode {
     private final Pose SHOT_POS_3 = new Pose(110, 83.5, Math.toRadians(0));
 
     private final Pose MIDPOINT = new Pose(54, 90, Math.toRadians(0));
-    private final Pose PARK = new Pose(48,40, Math.toRadians(0));
+    private final Pose PARK = new Pose(120,48, Math.toRadians(0));
 
     private final Pose COLLECT_POS_1 = new Pose(105, 90, Math.toRadians(0));
     private final Pose COLLECT_POS_2 = new Pose(112, 90, Math.toRadians(0));
