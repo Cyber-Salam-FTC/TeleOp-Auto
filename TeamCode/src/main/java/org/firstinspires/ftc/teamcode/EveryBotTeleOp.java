@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
@@ -81,7 +82,7 @@ public class EveryBotTeleOp extends LinearOpMode {
     private DcMotor intake = null;
     private DcMotor catapult1 = null;
     private DcMotor catapult2 = null;
-    private DcMotor foot = null;
+//    private DcMotor foot = null;
 
     // motor power 1 = 100% and 0.5 = 50%
     // negative values = reverse ex: -0.5 = reverse 50%
@@ -90,20 +91,21 @@ public class EveryBotTeleOp extends LinearOpMode {
     private double INTAKE_OFF_POWER = 0.0;
     private double intakePower = INTAKE_OFF_POWER;
 
-    private double FOOT_UP_POWER = 1.0;
-    private double FOOT_DOWN_POWER = -0.85;
-    private double FOOT_OFF_POWER = 0.0;
-    private double footPower = FOOT_OFF_POWER;
+//    private double FOOT_UP_POWER = 1.0;
+//    private double FOOT_DOWN_POWER = -0.85;
+//    private double FOOT_OFF_POWER = 0.0;
+//    private double footPower = FOOT_OFF_POWER;
 
     private double CATAPULT_UP_POWER = -1.0;
-    private double CATAPULT_DOWN_POWER = 1.0;
-    private double CATAPULT_HOLD_POWER = 0.2;
+    private double CATAPULT_DOWN_POWER = 1.8;
+    private double CATAPULT_HOLD_POWER = 0.4;
 
     private enum CatapultModes {UP, DOWN, HOLD}
     private CatapultModes pivotMode;
 
-    private enum FootMode {UP, DOWN, BRAKE}
-    private FootMode footmode;
+
+//    private enum FootMode {UP, DOWN, BRAKE}
+//    private FootMode footmode;
 
     /*
      * Code to run ONCE when the driver hits INIT (same as previous year's init())
@@ -124,7 +126,7 @@ public class EveryBotTeleOp extends LinearOpMode {
         intake = hardwareMap.get(DcMotor.class, "intake");
         catapult1 = hardwareMap.get(DcMotor.class, "catapult1");
         catapult2 = hardwareMap.get(DcMotor.class, "catapult2");
-        foot = hardwareMap.get(DcMotor.class, "foot");
+//        foot = hardwareMap.get(DcMotor.class, "foot");
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -139,22 +141,22 @@ public class EveryBotTeleOp extends LinearOpMode {
         // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
 
         // set direction of wheel motors
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // set direction of subsystem motors
-        intake.setDirection(DcMotor.Direction.FORWARD); // Forward should INTAKE.
-        catapult1.setDirection(DcMotor.Direction.REVERSE); // Backwards should pivot DOWN, or in the stowed position.
-        catapult2.setDirection(DcMotor.Direction.FORWARD);
-        foot.setDirection(DcMotor.Direction.REVERSE); // Backwards should should stay UP, or in the stowed position
+        intake.setDirection(DcMotor.Direction.REVERSE); // Forward should INTAKE.
+        catapult1.setDirection(DcMotor.Direction.FORWARD); // Backwards should pivot DOWN, or in the stowed position.
+        catapult2.setDirection(DcMotor.Direction.REVERSE);
+//        foot.setDirection(DcMotor.Direction.REVERSE); // Backwards should should stay UP, or in the stowed position
 
         // set initial subsystem behavior
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         catapult1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         catapult2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        foot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        foot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -175,8 +177,8 @@ public class EveryBotTeleOp extends LinearOpMode {
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             //axial = speed, lateral = turn, yaw = strafe
             double axial = gamepad1.right_trigger - gamepad1.left_trigger;  // Note: pushing stick forward gives negative value
-            double lateral = -gamepad1.right_stick_x;
-            double yaw = -gamepad1.left_stick_y;
+            double lateral = gamepad1.left_stick_x;
+            double yaw = gamepad1.right_stick_x;
 
             boolean intakeInButton = gamepad2.left_trigger > 0.2;
             boolean intakeOutButton = gamepad2.left_bumper;
@@ -192,8 +194,8 @@ public class EveryBotTeleOp extends LinearOpMode {
                 footOutButton = false;
             }
 
-            boolean catapultUpButton = gamepad1.right_bumper;
-            boolean catapultDownButton = gamepad1.right_trigger > 0.2;
+            boolean catapultUpButton = gamepad2.right_bumper;
+            boolean catapultDownButton = gamepad2.right_trigger > 0.2;
             if (catapultUpButton && catapultDownButton) {
                 catapultUpButton = false;
             }
@@ -202,8 +204,8 @@ public class EveryBotTeleOp extends LinearOpMode {
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
             leftFrontPower = axial + lateral + yaw;
-            rightFrontPower = axial - lateral - yaw;
             leftBackPower = axial - lateral + yaw;
+            rightFrontPower = axial - lateral - yaw;
             rightBackPower = axial + lateral - yaw;
 
             // Normalize the values so no wheel power exceeds 100%
@@ -243,31 +245,39 @@ public class EveryBotTeleOp extends LinearOpMode {
             }
 
             // FOOT CODE
-            if (footOutButton) {
-                footmode = FootMode.DOWN;
-                footPower = FOOT_DOWN_POWER;
-            } else if (footUpButton) {
-                footmode = FootMode.UP;
-                footPower = FOOT_UP_POWER;
-            } else {
-                footmode = FootMode.BRAKE;
-                footPower = FOOT_OFF_POWER;
-            }
+//            if (footOutButton) {
+//                footmode = FootMode.DOWN;
+//                footPower = FOOT_DOWN_POWER;
+//            } else if (footUpButton) {
+//                footmode = FootMode.UP;
+//                footPower = FOOT_UP_POWER;
+//            } else {
+//                footmode = FootMode.BRAKE;
+//                footPower = FOOT_OFF_POWER;
+//            }
 
             // Determine pivot mode
             if (catapultUpButton) {
                 pivotMode = CatapultModes.UP;
+                catapult1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                catapult2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 catapult1.setPower(CATAPULT_UP_POWER);
                 catapult2.setPower(CATAPULT_UP_POWER);
             } else if (catapultDownButton) {
                 pivotMode = CatapultModes.DOWN;
+                catapult1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                catapult2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 catapult1.setPower(CATAPULT_DOWN_POWER);
                 catapult2.setPower(CATAPULT_DOWN_POWER);
             } else {
                 pivotMode = CatapultModes.HOLD;
-                catapult1.setPower(CATAPULT_HOLD_POWER);
-                catapult2.setPower(CATAPULT_HOLD_POWER);
-                //Slight feed forward to keep catapult down while driving
+                catapult1.setTargetPosition(80);
+                catapult2.setTargetPosition(80);
+                catapult1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                catapult2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                catapult1.setPower(1);
+                catapult2.setPower(1);
+
             }
 
             // WRITE EFFECTORS - Send calculated power to wheels
@@ -277,7 +287,7 @@ public class EveryBotTeleOp extends LinearOpMode {
             rightBackDrive.setPower(rightBackPower);
 
             intake.setPower(intakePower);
-            foot.setPower(footPower);
+//            foot.setPower(footPower);
 
             String catapult_mode_str;
             if (pivotMode == CatapultModes.UP) {
@@ -294,8 +304,8 @@ public class EveryBotTeleOp extends LinearOpMode {
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
             telemetry.addData("Intake", "%%4.2f", intake.getPower());
-            telemetry.addData("Foot Power", "%4.2f", foot.getPower());
-            telemetry.addData("Foot MODE", "%s", footmode);
+//            telemetry.addData("Foot Power", "%4.2f", foot.getPower());
+//            telemetry.addData("Foot MODE", "%s", footmode);
             telemetry.addData("Catapult1 Current/Target/power", "%d, %d, %4.2f",
                     catapult1.getCurrentPosition(), catapult1.getTargetPosition(), catapult1.getPower());
             telemetry.addData("Catapult2 Current/Target/power", "%d, %d, %4.2f",

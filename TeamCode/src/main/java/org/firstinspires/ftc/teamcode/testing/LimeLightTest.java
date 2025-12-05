@@ -5,11 +5,15 @@ import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.cybersalam.hardware.MecanumDrive;
+
 @TeleOp
 public class LimeLightTest extends OpMode {
 
@@ -19,13 +23,26 @@ public class LimeLightTest extends OpMode {
     private DcMotorEx outtake;
     private double distance;
 
+    double forward, strafe, rotate;
+
+    private Servo door;
+
 
     @Override
     public void init() {
+
+
         limelight3A = hardwareMap.get(Limelight3A.class, "limelight");
         imu = hardwareMap.get(IMU.class, "imu");
         outtake = hardwareMap.get(DcMotorEx.class, "outtake");
         limelight3A.pipelineSwitch(0);
+
+        door = hardwareMap.get(Servo.class, "door");
+        outtake.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        door.setDirection(Servo.Direction.REVERSE);
+
+
     }
 
     @Override
@@ -35,6 +52,11 @@ public class LimeLightTest extends OpMode {
 
     @Override
     public void loop() {
+
+
+        MecanumDrive drive = new MecanumDrive();
+        drive.init(hardwareMap);
+
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         limelight3A.updateRobotOrientation(orientation.getYaw(AngleUnit.DEGREES));
 
@@ -46,11 +68,24 @@ public class LimeLightTest extends OpMode {
             telemetry.addData("Target X", llResult.getTx());
             telemetry.addData("Target Area", llResult.getTa());
             telemetry.addData("Botpose", botpose.toString());
+            telemetry.addData("Outtake Velocity", outtake.getVelocity());
         }
 
+        forward = gamepad1.right_trigger - gamepad1.left_trigger;
+        strafe = gamepad1.left_stick_x;
+        rotate = gamepad1.right_stick_x;
 
+        drive.drive(forward, strafe, rotate);
 
         outtake.setVelocity(getVelocity(getDistanceFromTag(llResult.getTa())));
+
+        if (gamepad1.a) {
+            door.setPosition(0);
+        }
+
+        if (gamepad1.b) {
+            door.setPosition(0.15);
+        }
 
     }
 
@@ -63,7 +98,9 @@ public class LimeLightTest extends OpMode {
 
     public double getVelocity(double dist) {
         double a = 0.0140252;
-        double velocity = (a*(Math.pow(dist, 2))) + (7.1669*dist) + 1265.8906;
+        double velocity = ((a*(Math.pow(dist, 2))) + (7.1669*dist) + 1300.8906);
         return velocity;
     }
+
+
 }

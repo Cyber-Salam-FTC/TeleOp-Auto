@@ -2,20 +2,30 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.cybersalam.hardware.MecanumDrive;
 
 @TeleOp(name = "Cyber Salam TeleOp")
 public class MainOp extends LinearOpMode {
+
+    private Limelight3A limelight3A;
+    private IMU imu;
+    private double distance;
 
     private DcMotor leftFront;
     private DcMotor leftRear;
@@ -63,6 +73,8 @@ public class MainOp extends LinearOpMode {
         outtake = hardwareMap.get(DcMotorEx.class, "outtake");
         rotor = hardwareMap.get(DcMotor.class, "rotor");
 
+        intake.setDirection(DcMotorSimple.Direction.REVERSE);
+
         outtake.setDirection(DcMotorSimple.Direction.REVERSE);
         outtake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -92,9 +104,15 @@ public class MainOp extends LinearOpMode {
         rotor.setTargetPosition(rotorPosition);
         rotor.setPower(1.0);
 
+        limelight3A = hardwareMap.get(Limelight3A.class, "limelight");
+        imu = hardwareMap.get(IMU.class, "imu");
+        limelight3A.pipelineSwitch(0);
+
         waitForStart();
 
         while (opModeIsActive()) {
+
+            limelight3A.start();
 
             forward = gamepad1.right_trigger - gamepad1.left_trigger;
             strafe = gamepad1.left_stick_x;
@@ -126,17 +144,35 @@ public class MainOp extends LinearOpMode {
                 intake.setPower(1);
             }
 
-            if (gamepad2.dpad_right) {
-                outtake.setVelocity(2500);
+            YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
+            limelight3A.updateRobotOrientation(orientation.getYaw(AngleUnit.DEGREES));
+
+            LLResult llResult = limelight3A.getLatestResult();
+            if (llResult != null && llResult.isValid()) {
+                Pose3D botpose = llResult.getBotpose_MT2();
+                distance = getDistanceFromTag(llResult.getTa());
+                telemetry.addData("Distance", distance);
+                telemetry.addData("Target X", llResult.getTx());
+                telemetry.addData("Target Area", llResult.getTa());
+                telemetry.addData("Botpose", botpose.toString());
+                telemetry.addData("Outtake Velocity", outtake.getVelocity());
             }
 
-            if (gamepad2.dpad_up) {
-                outtake.setVelocity(1600);
+            if (gamepad2.square) {
+                outtake.setVelocity(getVelocity(getDistanceFromTag(llResult.getTa())));
             }
 
-            if (gamepad2.dpad_down) {
-                outtake.setVelocity(1800);
-            }
+//            if (gamepad2.dpad_right) {
+//                outtake.setVelocity(2500);
+//            }
+//
+//            if (gamepad2.dpad_up) {
+//                outtake.setVelocity(1600);
+//            }
+//
+//            if (gamepad2.dpad_down) {
+//                outtake.setVelocity(1800);
+//            }
 
             rightBumper = gamepad2.right_bumper;
             leftBumper = gamepad2.left_bumper;
@@ -190,6 +226,8 @@ public class MainOp extends LinearOpMode {
 
             updateTelemetry();
         }
+
+
     }
 
     public void updateTelemetry() {
@@ -247,5 +285,17 @@ public class MainOp extends LinearOpMode {
 //            lastDetectedColor = currentDetectedColor;
 //        }
 //    }
+
+    public double getDistanceFromTag(double ta) {
+        double scale = 3783.447;
+        double distance = Math.sqrt(scale / ta);
+        return distance;
+    }
+
+    public double getVelocity(double dist) {
+        double a = 0.0447472;
+        double velocity = ((a*(Math.pow(dist, 2))) + (3.81821*dist) + 1353.07954);
+        return velocity;
+    }
 
 }
