@@ -59,7 +59,7 @@ public class EveryBotConstants {
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
     public static MecanumConstants drivetrain = new MecanumConstants()
-            .maxPower(0.4)
+            .maxPower(0.8)
             .rightFrontMotorName("rightFront")
             .rightRearMotorName("rightRear")
             .leftRearMotorName("leftRear")

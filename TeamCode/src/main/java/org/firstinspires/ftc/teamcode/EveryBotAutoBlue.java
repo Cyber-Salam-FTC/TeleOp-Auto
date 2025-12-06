@@ -12,8 +12,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.pedropathing.EveryBotConstants;
 
 
-@Autonomous(name = "Cyber Salam EveryBot Auto Red| 26903 ")
-public class EveryBotAutoRed extends LinearOpMode {
+@Autonomous(name = "Cyber Salam EveryBot Auto Blue | 26903 ")
+public class EveryBotAutoBlue extends LinearOpMode {
     private Follower follower;
 
     private double CATAPULT_UP_POWER = -1.0;
@@ -28,26 +28,26 @@ public class EveryBotAutoRed extends LinearOpMode {
     private int pathState;
 
     //    start pose
-    private final Pose START_POSE = new Pose(123, 123.8, Math.toRadians(38));
+    private final Pose START_POSE = new Pose(21, 123.8, Math.toRadians(145));
 
     //    shot pos
-    private final Pose SHOOT_POS = new Pose(121, 121.3, Math.toRadians(38));
+    private final Pose SHOOT_POS = new Pose(23, 121.3, Math.toRadians(145));
 
 //    empty bucket
 
-    private final Pose EMPTY = new Pose(130, 70, Math.toRadians(0));
+    private final Pose EMPTY = new Pose(15, 70, Math.toRadians(180));
 
 
     //  collect positions
-    private final Pose COLLECT_POS_1 = new Pose(90, 90, Math.toRadians(0));
-    private final Pose COLLECT_POS_2 = new Pose(103, 90, Math.toRadians(0));
-    private final Pose COLLECT_POS_3 = new Pose(107, 90, Math.toRadians(0));
-    private final Pose COLLECT_POS_4 = new Pose(90, 72, Math.toRadians(0));
-    private final Pose COLLECT_POS_5 = new Pose(103, 72, Math.toRadians(0));
-    private final Pose COLLECT_POS_6 = new Pose(107, 72, Math.toRadians(0));
-    private final Pose COLLECT_POS_7 = new Pose(90, 48, Math.toRadians(0));
-    private final Pose COLLECT_POS_8 = new Pose(103, 48, Math.toRadians(0));
-    private final Pose COLLECT_POS_9 = new Pose(107, 48, Math.toRadians(0));
+    private final Pose COLLECT_POS_1 = new Pose(54, 90, Math.toRadians(180));
+    private final Pose COLLECT_POS_2 = new Pose(41, 90, Math.toRadians(180));
+    private final Pose COLLECT_POS_3 = new Pose(37, 90, Math.toRadians(180));
+    private final Pose COLLECT_POS_4 = new Pose(90, 72, Math.toRadians(180));
+    private final Pose COLLECT_POS_5 = new Pose(41, 72, Math.toRadians(180));
+    private final Pose COLLECT_POS_6 = new Pose(37, 72, Math.toRadians(180));
+    private final Pose COLLECT_POS_7 = new Pose(90, 48, Math.toRadians(180));
+    private final Pose COLLECT_POS_8 = new Pose(41, 48, Math.toRadians(180));
+    private final Pose COLLECT_POS_9 = new Pose(37, 48, Math.toRadians(180));
 
     private Path smallMove, empty, backToShot1, backToShot2, backToShot3, backToShot4, last;
     private PathChain collecting1, collecting2, collecting3;
@@ -61,11 +61,11 @@ public class EveryBotAutoRed extends LinearOpMode {
 //        shot to collect
         collecting1 = follower.pathBuilder()
                 .addPath(new BezierLine(SHOOT_POS, COLLECT_POS_1))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .addPath(new BezierLine(COLLECT_POS_1, COLLECT_POS_2))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .addPath(new BezierLine(COLLECT_POS_2, COLLECT_POS_3))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
 
 
@@ -76,9 +76,12 @@ public class EveryBotAutoRed extends LinearOpMode {
 
 
         backToShot1 = new Path(new BezierLine(EMPTY, SHOOT_POS));
+//        backToShot1.setBrakingStrength(1);
         backToShot1.setLinearHeadingInterpolation(EMPTY.getHeading(), SHOOT_POS.getHeading());
 
-        collecting2 = follower.pathBuilder().addPath(new BezierLine(SHOOT_POS, COLLECT_POS_4))
+        collecting2 = follower.pathBuilder()
+//                .setBrakingStrength(0.5)
+                .addPath(new BezierLine(SHOOT_POS, COLLECT_POS_4))
                 .setLinearHeadingInterpolation(SHOOT_POS.getHeading(), COLLECT_POS_4.getHeading())
                 .addPath(new BezierLine(COLLECT_POS_4, COLLECT_POS_5))
                 .setLinearHeadingInterpolation(COLLECT_POS_4.getHeading(), COLLECT_POS_5.getHeading())
@@ -87,9 +90,11 @@ public class EveryBotAutoRed extends LinearOpMode {
                 .build();
 
         backToShot2 = new Path(new BezierLine(COLLECT_POS_6, SHOOT_POS));
+//        backToShot2.setBrakingStrength(1);
         backToShot2.setLinearHeadingInterpolation(COLLECT_POS_6.getHeading(), SHOOT_POS.getHeading());
 
         collecting3 = follower.pathBuilder()
+//                .setBrakingStrength(0.5)
                 .addPath(new BezierLine(SHOOT_POS, COLLECT_POS_7))
                 .setLinearHeadingInterpolation(SHOOT_POS.getHeading(), COLLECT_POS_7.getHeading())
                 .addPath(new BezierLine(COLLECT_POS_7, COLLECT_POS_8))
@@ -99,9 +104,11 @@ public class EveryBotAutoRed extends LinearOpMode {
                 .build();
 
         backToShot3 = new Path(new BezierLine(COLLECT_POS_9, SHOOT_POS));
+//        backToShot3.setBrakingStrength(1);
         backToShot3.setLinearHeadingInterpolation(COLLECT_POS_9.getHeading(), SHOOT_POS.getHeading());
 
         last = new Path(new BezierLine(SHOOT_POS, COLLECT_POS_1));
+//        last.setBrakingStrength(1);
         last.setLinearHeadingInterpolation(SHOOT_POS.getHeading(), COLLECT_POS_1.getHeading());
 
 
