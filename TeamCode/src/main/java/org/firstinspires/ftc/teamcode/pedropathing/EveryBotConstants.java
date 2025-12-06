@@ -50,7 +50,7 @@ public class EveryBotConstants {
             50
     );
     public static PinpointConstants localizerConstants = new PinpointConstants()
-            .forwardPodY(1.0)
+            .forwardPodY(5.5)
             .strafePodX(5.5)
             .distanceUnit(DistanceUnit.INCH)
             .hardwareMapName("pinpointComputer")
@@ -59,7 +59,7 @@ public class EveryBotConstants {
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
     public static MecanumConstants drivetrain = new MecanumConstants()
-            .maxPower(1)
+            .maxPower(0.4)
             .rightFrontMotorName("rightFront")
             .rightRearMotorName("rightRear")
             .leftRearMotorName("leftRear")
