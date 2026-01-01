@@ -1,0 +1,103 @@
+package org.firstinspires.ftc.teamcode.newrobot.cybersalam.hardware;
+
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.opencv.core.Mat;
+
+public class RobotHardware {
+
+    public DcMotor leftFront;
+    public DcMotor leftRear;
+    public DcMotor rightFront;
+    public DcMotor rightRear;
+    private IMU imu;
+
+    public void init(HardwareMap hwMap) {
+        leftFront = hwMap.get(DcMotor.class, "leftFront");
+        leftRear = hwMap.get(DcMotor.class, "leftRear");
+        rightFront = hwMap.get(DcMotor.class, "rightFront");
+        rightRear = hwMap.get(DcMotor.class, "rightRear");
+
+        // Motor Direction Setup
+        leftFront.setDirection(DcMotor.Direction.REVERSE);
+        leftRear.setDirection(DcMotor.Direction.REVERSE);
+        rightFront.setDirection(DcMotor.Direction.FORWARD);
+        rightRear.setDirection(DcMotor.Direction.FORWARD);
+
+        // Motor RunMode and ZeroPowerBehavior
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // IMU Initialization (Modern)
+        // Note: You would typically uncomment and adjust the orientation below
+        // imu = hwMap.get(IMU.class, "imu");
+        // RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+        // RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
+        // RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+        // imu.initialize(new IMU.Parameters(orientationOnRobot));
+        // imu.resetYaw();
+    }
+
+    public void leftFrontSpeed(double speed) {
+        leftFront.setPower(speed);
+    }
+
+    public void leftRearSpeed(double speed) {
+        leftRear.setPower(speed);
+    }
+    public void rightFrontSpeed(double speed) {
+        rightFront.setPower(speed);
+    }
+    public void rightRearSpeed(double speed) {
+        rightRear.setPower(speed);
+    }
+    public void setMotorPowerBasedOnDirection(int DirectionCase){
+        switch(DirectionCase) {
+            //Turn right+forward.
+            case 1:
+                leftFront.setPower(1);
+                rightFront.setPower(0.5);
+                leftRear.setPower(1);
+                rightRear.setPower(0.5);
+                break;
+            //turn left+forward
+            case 2:
+                leftFront.setPower(0.5);
+                rightFront.setPower(1);
+                leftRear.setPower(0.5);
+                rightRear.setPower(1);
+                break;
+            //turn right+backward
+            case 3:
+                leftFront.setPower(-1);
+                rightFront.setPower(-0.5);
+                leftRear.setPower(-1);
+                rightRear.setPower(-0.5);
+                break;
+            //turn left+backward
+            case 4:
+                leftFront.setPower(-0.5);
+                rightFront.setPower(-1);
+                leftRear.setPower(-0.5);
+                rightRear.setPower(-1);
+                break;
+            default:
+                leftFront.setPower(1);
+                rightFront.setPower(1);
+                leftRear.setPower(1);
+                rightRear.setPower(1);
+        }
+    }
+}
