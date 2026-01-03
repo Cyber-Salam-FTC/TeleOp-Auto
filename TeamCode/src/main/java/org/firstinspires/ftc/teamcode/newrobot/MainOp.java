@@ -5,25 +5,23 @@ import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
-
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.newrobot.cybersalam.hardware.MecanumDrive;
+
 public class MainOp extends LinearOpMode {
 
     double forward, strafe, rotate, distance;
-
-    double INTAKE_IN_POWER, INTAKE_OUT_POWER;
-
-    boolean startShootButton, endShootButton, intakeInButton, intakeOutButton;
+    int intakeState = 0;
+    double INTAKE_IN_POWER = 0.8;
+    double INTAKE_OUT_POWER = -0.8;
 
     @Override
     public void runOpMode() {
-//        init motors/mecanum drive
         MecanumDrive drive = new MecanumDrive();
-
         drive.init(hardwareMap);
 
         DcMotor leftFront = hardwareMap.get(DcMotor.class, "leftFront");
@@ -46,19 +44,13 @@ public class MainOp extends LinearOpMode {
         intake1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intake2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        startShootButton = gamepad2.square;
-        endShootButton = gamepad2.triangle;
-
-        intakeInButton = gamepad2.left_stick_y > 0;
-        intakeOutButton = false;
-
-        if (gamepad2.left_stick_y < 0) {
-            intakeInButton = false;
-            intakeOutButton = true;
-        } else {
-            intakeInButton = false;
-        }
-
+        leftFront.setDirection(DcMotor.Direction.FORWARD);
+        leftRear.setDirection(DcMotor.Direction.FORWARD);
+        rightFront.setDirection(DcMotor.Direction.REVERSE);
+        rightRear.setDirection(DcMotor.Direction.REVERSE);
+        shooter.setDirection(DcMotorSimple.Direction.REVERSE);
+        intake1.setDirection(DcMotorSimple.Direction.REVERSE);
+        intake2.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 
@@ -71,43 +63,44 @@ public class MainOp extends LinearOpMode {
 
             drive.drive(forward, strafe, rotate);
 
-
-        }
-
-        if (startShootButton) {
-            YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
-            limelight3A.updateRobotOrientation(orientation.getYaw(AngleUnit.DEGREES));
-
-            LLResult llResult = limelight3A.getLatestResult();
-            if (llResult != null && llResult.isValid()) {
-                Pose3D botpose = llResult.getBotpose_MT2();
-                distance = getDistanceFromTag(llResult.getTa());
-                telemetry.addData("Distance", distance);
-                telemetry.addData("Target X", llResult.getTx());
-                telemetry.addData("Target Area", llResult.getTa());
-                telemetry.addData("Botpose", botpose.toString());
-                telemetry.addData("Outtake Velocity", shooter.getVelocity());
+            if (gamepad2.circle) {
+                intakeState = 0;
+            } else if (gamepad2.cross) {
+                intakeState = 1;
+            } else if (gamepad2.triangle) {
+                intakeState = -1;
             }
 
-            assert llResult != null;
-            shooter.setVelocity(getVelocity(getDistanceFromTag(llResult.getTa())));
+            if (intakeState == 1) {
+                startIntake(intake1, intake2);
+            } else if (intakeState == -1) {
+                intakeOut(intake1, intake2);
+            } else {
+                stopIntake(intake1, intake2);
+            }
+
+            if (gamepad2.dpad_up) {
+                YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
+                limelight3A.updateRobotOrientation(orientation.getYaw(AngleUnit.DEGREES));
+
+                LLResult llResult = limelight3A.getLatestResult();
+                if (llResult != null && llResult.isValid()) {
+                    Pose3D botpose = llResult.getBotpose_MT2();
+                    distance = getDistanceFromTag(llResult.getTa());
+                    shooter.setVelocity(getVelocity(distance));
+
+                    telemetry.addData("Distance", distance);
+                    telemetry.addData("Target X", llResult.getTx());
+                    telemetry.addData("Outtake Velocity", shooter.getVelocity());
+                }
+            }
+
+            if (gamepad2.dpad_down) {
+                shooter.setVelocity(0);
+            }
+
+            telemetry.update();
         }
-
-        if (endShootButton) {
-            shooter.setVelocity(0);
-        }
-
-        if (intakeInButton) {
-            intake1.setPower(INTAKE_IN_POWER);
-            intake2.setPower(INTAKE_IN_POWER);
-        }
-
-        if (intakeOutButton) {
-            intake1.setPower(INTAKE_OUT_POWER);
-            intake2.setPower(INTAKE_OUT_POWER);
-        }
-
-
     }
 
     public double getDistanceFromTag(double ta) {
@@ -117,6 +110,21 @@ public class MainOp extends LinearOpMode {
 
     public double getVelocity(double dist) {
         double a = 0.0447472;
-        return ((a*(Math.pow(dist, 2))) + (3.81821*dist) + 1353.07954);
+        return ((a * (Math.pow(dist, 2))) + (3.81821 * dist) + 1353.07954);
+    }
+
+    public void startIntake(DcMotor motor1, DcMotor motor2) {
+        motor1.setPower(INTAKE_IN_POWER);
+        motor2.setPower(INTAKE_IN_POWER);
+    }
+
+    public void stopIntake(DcMotor motor1, DcMotor motor2) {
+        motor1.setPower(0);
+        motor2.setPower(0);
+    }
+
+    public void intakeOut(DcMotor motor1, DcMotor motor2) {
+        motor1.setPower(INTAKE_OUT_POWER);
+        motor2.setPower(INTAKE_OUT_POWER);
     }
 }
