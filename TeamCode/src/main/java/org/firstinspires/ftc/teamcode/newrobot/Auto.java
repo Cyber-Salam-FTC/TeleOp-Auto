@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.newrobot.pedropathing.Constants;
 @Autonomous(name = "Cyber Salam Auto Red | 26903 ")
 public class Auto extends LinearOpMode {
     private Follower follower;
-    private int pathState;
+    private int pathState, SHOOTING_TIME;
     private ElapsedTime actionTimer = new ElapsedTime();
 
     double INTAKE_IN_POWER = 0.8;
@@ -120,6 +120,8 @@ public class Auto extends LinearOpMode {
         intake2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        SHOOTING_TIME = 4;
+
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
@@ -145,7 +147,7 @@ public class Auto extends LinearOpMode {
                 break;
             case 2:
                 shoot();
-                if(actionTimer.seconds() > 1.5){
+                if(actionTimer.seconds() > SHOOTING_TIME){
                     shooter.setVelocity(0);
                     pathState++;
                 }
@@ -172,7 +174,7 @@ public class Auto extends LinearOpMode {
                 break;
             case 7:
                 shoot();
-                if(actionTimer.seconds() > 1.5){
+                if(actionTimer.seconds() > SHOOTING_TIME){
                     shooter.setVelocity(0);
                     pathState++;
                 }
@@ -199,7 +201,7 @@ public class Auto extends LinearOpMode {
                 break;
             case 12:
                 shoot();
-                if(actionTimer.seconds() > 1.5){
+                if(actionTimer.seconds() > SHOOTING_TIME){
                     shooter.setVelocity(0);
                     pathState++;
                 }
