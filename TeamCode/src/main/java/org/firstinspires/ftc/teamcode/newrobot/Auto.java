@@ -44,7 +44,7 @@ public class Auto extends LinearOpMode {
 
     private Path smallMove, backToShot1, backToShot2, backToShot3;
     private PathChain collecting1, collecting2, collecting3, empty;
-    private DcMotor intake1, intake2;
+    private DcMotor intake1;
     private DcMotorEx shooter;
     private Limelight3A limelight3A;
     private IMU imu;
@@ -107,17 +107,14 @@ public class Auto extends LinearOpMode {
         pathState = 0;
 
         intake1 = hardwareMap.get(DcMotor.class, "intake1");
-        intake2 = hardwareMap.get(DcMotor.class, "intake2");
         shooter = hardwareMap.get(DcMotorEx.class, "shooter");
         limelight3A = hardwareMap.get(Limelight3A.class, "limelight");
         imu = hardwareMap.get(IMU.class, "imu");
 
         intake1.setDirection(DcMotor.Direction.REVERSE);
-        intake2.setDirection(DcMotor.Direction.REVERSE);
         shooter.setDirection(DcMotorEx.Direction.REVERSE);
 
         intake1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        intake2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         SHOOTING_TIME = 4;
@@ -153,7 +150,7 @@ public class Auto extends LinearOpMode {
                 }
                 break;
             case 3:
-                startIntake(intake1, intake2);
+                startIntake(intake1);
                 follower.followPath(collecting1, 0.5, true);
                 pathState++;
                 break;
@@ -180,7 +177,7 @@ public class Auto extends LinearOpMode {
                 }
                 break;
             case 8:
-                startIntake(intake1, intake2);
+                startIntake(intake1);
                 follower.followPath(collecting2, 0.5, true);
                 pathState++;
                 break;
@@ -207,7 +204,7 @@ public class Auto extends LinearOpMode {
                 }
                 break;
             default:
-                stopIntake(intake1, intake2);
+                stopIntake(intake1);
                 shooter.setVelocity(0);
                 break;
         }
@@ -224,14 +221,12 @@ public class Auto extends LinearOpMode {
         }
     }
 
-    public void startIntake(DcMotor motor1, DcMotor motor2) {
+    public void startIntake(DcMotor motor1) {
         motor1.setPower(INTAKE_IN_POWER);
-        motor2.setPower(INTAKE_IN_POWER);
     }
 
-    public void stopIntake(DcMotor motor1, DcMotor motor2) {
+    public void stopIntake(DcMotor motor1) {
         motor1.setPower(0);
-        motor2.setPower(0);
     }
 
     public double getDistanceFromTag(double ta) {

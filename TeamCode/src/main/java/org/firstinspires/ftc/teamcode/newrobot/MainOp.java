@@ -29,7 +29,6 @@ public class MainOp extends LinearOpMode {
         DcMotor rightFront = hardwareMap.get(DcMotor.class, "rightFront");
         DcMotor rightRear = hardwareMap.get(DcMotor.class, "rightRear");
         DcMotor intake1 = hardwareMap.get(DcMotor.class, "intake1");
-        DcMotor intake2 = hardwareMap.get(DcMotor.class, "intake2");
         DcMotorEx shooter = hardwareMap.get(DcMotorEx.class, "shooter");
 
         Limelight3A limelight3A = hardwareMap.get(Limelight3A.class, "limelight");
@@ -42,7 +41,6 @@ public class MainOp extends LinearOpMode {
         rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intake1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        intake2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         leftFront.setDirection(DcMotor.Direction.FORWARD);
         leftRear.setDirection(DcMotor.Direction.FORWARD);
@@ -50,7 +48,6 @@ public class MainOp extends LinearOpMode {
         rightRear.setDirection(DcMotor.Direction.REVERSE);
         shooter.setDirection(DcMotorSimple.Direction.REVERSE);
         intake1.setDirection(DcMotorSimple.Direction.REVERSE);
-        intake2.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 
@@ -72,11 +69,11 @@ public class MainOp extends LinearOpMode {
             }
 
             if (intakeState == 1) {
-                startIntake(intake1, intake2);
+                startIntake(intake1);
             } else if (intakeState == -1) {
-                intakeOut(intake1, intake2);
+                intakeOut(intake1);
             } else {
-                stopIntake(intake1, intake2);
+                stopIntake(intake1);
             }
 
             if (gamepad2.dpad_up) {
@@ -113,18 +110,15 @@ public class MainOp extends LinearOpMode {
         return ((a * (Math.pow(dist, 2))) + (3.81821 * dist) + 1353.07954);
     }
 
-    public void startIntake(DcMotor motor1, DcMotor motor2) {
+    public void startIntake(DcMotor motor1) {
         motor1.setPower(INTAKE_IN_POWER);
-        motor2.setPower(INTAKE_IN_POWER);
     }
 
-    public void stopIntake(DcMotor motor1, DcMotor motor2) {
+    public void stopIntake(DcMotor motor1) {
         motor1.setPower(0);
-        motor2.setPower(0);
     }
 
-    public void intakeOut(DcMotor motor1, DcMotor motor2) {
+    public void intakeOut(DcMotor motor1) {
         motor1.setPower(INTAKE_OUT_POWER);
-        motor2.setPower(INTAKE_OUT_POWER);
     }
 }
