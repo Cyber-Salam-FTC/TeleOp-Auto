@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.newrobot;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.newrobot.cybersalam.hardware.MecanumDrive;
 
+@TeleOp(name = "Cyber Salam FTC NewBot TeleOp")
 public class MainOp extends LinearOpMode {
 
     double forward, strafe, rotate, distance;
@@ -77,19 +79,22 @@ public class MainOp extends LinearOpMode {
             }
 
             if (gamepad2.dpad_up) {
-                YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
-                limelight3A.updateRobotOrientation(orientation.getYaw(AngleUnit.DEGREES));
 
-                LLResult llResult = limelight3A.getLatestResult();
-                if (llResult != null && llResult.isValid()) {
-                    Pose3D botpose = llResult.getBotpose_MT2();
-                    distance = getDistanceFromTag(llResult.getTa());
-                    shooter.setVelocity(getVelocity(distance));
+                shooter.setVelocity(2800);
 
-                    telemetry.addData("Distance", distance);
-                    telemetry.addData("Target X", llResult.getTx());
+//                YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
+//                limelight3A.updateRobotOrientation(orientation.getYaw(AngleUnit.DEGREES));
+
+//                LLResult llResult = limelight3A.getLatestResult();
+//                if (llResult != null && llResult.isValid()) {
+//                    Pose3D botpose = llResult.getBotpose_MT2();
+//                    distance = getDistanceFromTag(llResult.getTa());
+//                    shooter.setVelocity(getVelocity(distance));
+
+//                    telemetry.addData("Distance", distance);
+//                    telemetry.addData("Target X", llResult.getTx());
                     telemetry.addData("Outtake Velocity", shooter.getVelocity());
-                }
+//                }
             }
 
             if (gamepad2.dpad_down) {

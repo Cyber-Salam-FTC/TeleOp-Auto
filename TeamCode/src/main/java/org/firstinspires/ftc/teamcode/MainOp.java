@@ -140,6 +140,7 @@ public class MainOp extends LinearOpMode {
                 intake.setPower(-1);
             }
 
+
             if (gamepad2.dpad_left) {
                 intake.setPower(1);
             }
@@ -160,6 +161,9 @@ public class MainOp extends LinearOpMode {
 
             if (gamepad2.square) {
                 outtake.setVelocity(getVelocity(getDistanceFromTag(llResult.getTa())));
+            }
+            if (gamepad2.right_trigger > 0.5) {
+                outtake.setPower(-0.5);
             }
 
 //            if (gamepad2.dpad_right) {
