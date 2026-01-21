@@ -78,10 +78,10 @@ public class Tuning extends SelectableOpMode {
     @Override
     public void onSelect() {
         if (follower == null) {
-            follower = EveryBotConstants.createFollower(hardwareMap);
+            follower = org.firstinspires.ftc.teamcode.newrobot.pedropathing.Constants.createFollower(hardwareMap);
             PanelsConfigurables.INSTANCE.refreshClass(this);
         } else {
-            follower = EveryBotConstants.createFollower(hardwareMap);
+            follower = org.firstinspires.ftc.teamcode.newrobot.pedropathing.Constants.createFollower(hardwareMap);
         }
 
         follower.setStartingPose(new Pose());

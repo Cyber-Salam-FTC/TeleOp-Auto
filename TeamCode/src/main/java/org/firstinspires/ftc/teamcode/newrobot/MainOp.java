@@ -1,25 +1,16 @@
 package org.firstinspires.ftc.teamcode.newrobot;
 
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.IMU;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.newrobot.cybersalam.hardware.MecanumDrive;
+import com.qualcomm.hardware.limelightvision.LLResult; import com.qualcomm.hardware.limelightvision.Limelight3A; import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode; import com.qualcomm.robotcore.eventloop.opmode.TeleOp; import com.qualcomm.robotcore.hardware.DcMotor; import com.qualcomm.robotcore.hardware.DcMotorEx; import com.qualcomm.robotcore.hardware.DcMotorSimple; import com.qualcomm.robotcore.hardware.IMU; import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit; import org.firstinspires.ftc.robotcore.external.navigation.Pose3D; import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles; import org.firstinspires.ftc.teamcode.newrobot.cybersalam.hardware.MecanumDrive;
 
-@TeleOp(name = "Cyber Salam FTC NewBot TeleOp")
+@TeleOp(name = "Cyber Salam - Stilgar TeleOp")
+
 public class MainOp extends LinearOpMode {
 
     double forward, strafe, rotate, distance;
     int intakeState = 0;
-    double INTAKE_IN_POWER = 0.8;
-    double INTAKE_OUT_POWER = -0.8;
+    double INTAKE_IN_POWER = 1;
+    double INTAKE_OUT_POWER = -1;
+    double PUSH_IN_POWER = 1;
 
     @Override
     public void runOpMode() {
@@ -31,6 +22,8 @@ public class MainOp extends LinearOpMode {
         DcMotor rightFront = hardwareMap.get(DcMotor.class, "rightFront");
         DcMotor rightRear = hardwareMap.get(DcMotor.class, "rightRear");
         DcMotor intake1 = hardwareMap.get(DcMotor.class, "intake1");
+        DcMotor intake2 = hardwareMap.get(DcMotor.class, "intake2");
+        DcMotor intake3 = hardwareMap.get(DcMotor.class, "intake3");
         DcMotorEx shooter = hardwareMap.get(DcMotorEx.class, "shooter");
 
         Limelight3A limelight3A = hardwareMap.get(Limelight3A.class, "limelight");
@@ -44,18 +37,19 @@ public class MainOp extends LinearOpMode {
         shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intake1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        leftFront.setDirection(DcMotor.Direction.FORWARD);
-        leftRear.setDirection(DcMotor.Direction.FORWARD);
-        rightFront.setDirection(DcMotor.Direction.REVERSE);
-        rightRear.setDirection(DcMotor.Direction.REVERSE);
+        leftFront.setDirection(DcMotor.Direction.REVERSE);
+        leftRear.setDirection(DcMotor.Direction.REVERSE);
+        rightFront.setDirection(DcMotor.Direction.FORWARD);
+        rightRear.setDirection(DcMotor.Direction.FORWARD);
         shooter.setDirection(DcMotorSimple.Direction.REVERSE);
-        intake1.setDirection(DcMotorSimple.Direction.REVERSE);
+        intake1.setDirection(DcMotorSimple.Direction.FORWARD);
+        intake2.setDirection(DcMotorSimple.Direction.FORWARD);
+        intake3.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        limelight3A.start();
         waitForStart();
 
         while (opModeIsActive()) {
-            limelight3A.start();
-
             forward = gamepad1.right_trigger - gamepad1.left_trigger;
             strafe = gamepad1.left_stick_x;
             rotate = gamepad1.right_stick_x;
@@ -71,30 +65,35 @@ public class MainOp extends LinearOpMode {
             }
 
             if (intakeState == 1) {
-                startIntake(intake1);
+                startMainIntake(intake1, intake2);
             } else if (intakeState == -1) {
-                intakeOut(intake1);
+                intakeMainOut(intake1, intake2);
             } else {
-                stopIntake(intake1);
+                stopMainIntake(intake1, intake2);
+            }
+
+            if (gamepad2.square) {
+                intake3.setPower(PUSH_IN_POWER);
+            } else {
+                intake3.setPower(0);
             }
 
             if (gamepad2.dpad_up) {
+                YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
+                limelight3A.updateRobotOrientation(orientation.getYaw(AngleUnit.DEGREES));
 
-                shooter.setVelocity(2800);
+                LLResult llResult = limelight3A.getLatestResult();
+                if (llResult != null && llResult.isValid()) {
+                    distance = getDistanceFromTag(llResult.getTa());
+                    shooter.setVelocity(getVelocity(distance));
 
-//                YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
-//                limelight3A.updateRobotOrientation(orientation.getYaw(AngleUnit.DEGREES));
-
-//                LLResult llResult = limelight3A.getLatestResult();
-//                if (llResult != null && llResult.isValid()) {
-//                    Pose3D botpose = llResult.getBotpose_MT2();
-//                    distance = getDistanceFromTag(llResult.getTa());
-//                    shooter.setVelocity(getVelocity(distance));
-
-//                    telemetry.addData("Distance", distance);
-//                    telemetry.addData("Target X", llResult.getTx());
+                    telemetry.addData("Distance", distance);
                     telemetry.addData("Outtake Velocity", shooter.getVelocity());
-//                }
+                }
+            }
+
+            if (gamepad2.dpad_right) {
+                shooter.setVelocity(1600);
             }
 
             if (gamepad2.dpad_down) {
@@ -106,24 +105,29 @@ public class MainOp extends LinearOpMode {
     }
 
     public double getDistanceFromTag(double ta) {
-        double scale = 3783.447;
-        return Math.sqrt(scale / ta);
+        double scale = 72.06169;
+        double power = -0.509117;
+        double distance = scale * Math.pow(ta, power);
+        return distance;
     }
 
     public double getVelocity(double dist) {
-        double a = 0.0447472;
-        return ((a * (Math.pow(dist, 2))) + (3.81821 * dist) + 1353.07954);
+        double a = 0.29714;
+        return ((a*Math.pow(dist, 2)) + (20.07681*dist) + 0);
     }
 
-    public void startIntake(DcMotor motor1) {
+    public void startMainIntake(DcMotor motor1, DcMotor motor2) {
         motor1.setPower(INTAKE_IN_POWER);
+        motor2.setPower(INTAKE_IN_POWER);
     }
 
-    public void stopIntake(DcMotor motor1) {
+    public void stopMainIntake(DcMotor motor1, DcMotor motor2) {
         motor1.setPower(0);
+        motor2.setPower(0);
     }
 
-    public void intakeOut(DcMotor motor1) {
+    public void intakeMainOut(DcMotor motor1, DcMotor motor2) {
         motor1.setPower(INTAKE_OUT_POWER);
+        motor2.setPower(INTAKE_OUT_POWER);
     }
 }

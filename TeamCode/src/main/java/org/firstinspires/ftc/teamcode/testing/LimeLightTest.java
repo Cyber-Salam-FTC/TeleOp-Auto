@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.cybersalam.hardware.MecanumDrive;
 
-@TeleOp
+@TeleOp(name = "LimeLight Test")
 public class LimeLightTest extends OpMode {
 
     private Limelight3A limelight3A;
@@ -34,7 +34,7 @@ public class LimeLightTest extends OpMode {
 
         limelight3A = hardwareMap.get(Limelight3A.class, "limelight");
         imu = hardwareMap.get(IMU.class, "imu");
-        outtake = hardwareMap.get(DcMotorEx.class, "outtake");
+        outtake = hardwareMap.get(DcMotorEx.class, "shooter");
         limelight3A.pipelineSwitch(0);
 
         door = hardwareMap.get(Servo.class, "door");
@@ -79,13 +79,6 @@ public class LimeLightTest extends OpMode {
 
         outtake.setVelocity(getVelocity(getDistanceFromTag(llResult.getTa())));
 
-        if (gamepad1.a) {
-            door.setPosition(0);
-        }
-
-        if (gamepad1.b) {
-            door.setPosition(0.15);
-        }
 
     }
 
