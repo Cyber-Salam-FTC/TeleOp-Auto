@@ -56,6 +56,7 @@ public class Tuning extends SelectableOpMode {
                 l.add("Turn Tuner", TurnTuner::new);
             });
             s.folder("Automatic", a -> {
+                a.add("Automatic Localization Test", AutoLocalizationTest::new);
                 a.add("Forward Velocity Tuner", ForwardVelocityTuner::new);
                 a.add("Lateral Velocity Tuner", LateralVelocityTuner::new);
                 a.add("Forward Zero Power Acceleration Tuner", ForwardZeroPowerAccelerationTuner::new);
@@ -160,6 +161,80 @@ class LocalizationTest extends OpMode {
         telemetryM.update(telemetry);
 
         drawCurrentAndHistory();
+    }
+}
+
+/**
+ * This is the AutoLocalizationTest OpMode. This is an automatic tuner to ensure your encoder directions are correct using the
+ * PoseUpdater. The OpMode will print out the robot's pose to telemetry as well as drawing the robot in Panels.
+ * You should use this to check the robot's localization and make sure the encoder directions are correct.
+ *
+ * @author Zidan Harb - 26903 Cyber Salam
+ * @version 1.0, 1/25/2026
+ */
+
+class AutoLocalizationTest extends OpMode {
+
+    Boolean xCorrect = null;
+    Boolean yCorrect = null;
+    boolean movingForward = false;
+    boolean movingSide = false;
+
+    double startEncoderValue;
+
+    @Override
+    public void init() {}
+
+    @Override
+    public void init_loop() {
+        telemetryM.debug("On start, the robot will move 2000 ticks (measured based on chassis type)" +
+                "forward and left. Make sure you have enough room for the robot to move around.");
+        telemetryM.update(telemetry);
+        follower.update();
+    }
+
+    @Override
+    public void start() {
+        follower.activateDrive();
+        startEncoderValue = follower.getPose().getX();
+        movingForward = true;
+    }
+
+    @Override
+    public void loop() {
+        follower.update();
+
+        double x = follower.getPose().getX();
+        double y = follower.getPose().getY();
+
+        int TICKS_TO_MOVE = 2000;
+        if (movingForward) {
+            if (Math.abs(x - startEncoderValue) < TICKS_TO_MOVE) {
+                follower.setTeleOpDrive(0.5, 0, 0, false);
+            } else {
+                follower.setTeleOpDrive(0, 0, 0, false);
+                xCorrect = (x > startEncoderValue);
+                movingForward = false;
+                movingSide = true;
+                startEncoderValue = y;
+            }
+        } else if (movingSide) {
+            if (Math.abs(y - startEncoderValue) < TICKS_TO_MOVE) {
+                follower.setTeleOpDrive(0, 0.5, 0, false);
+            } else {
+                follower.setTeleOpDrive(0, 0, 0, false);
+                yCorrect = (y > startEncoderValue);
+                movingSide = false;
+            }
+        }
+
+        telemetryM.debug("x: " + x);
+        telemetryM.debug("y: " + y);
+        telemetryM.debug("Forward Encoder Direction Correct: " + xCorrect);
+        telemetryM.debug("Strafe Encoder Direction Correct: " + yCorrect);
+        telemetryM.debug("\n");
+        telemetryM.debug("If there are any null values, check your wiring and configuration again!");
+        telemetryM.update(telemetry);
     }
 }
 

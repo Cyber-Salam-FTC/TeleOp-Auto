@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.newrobot;
 
+
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
@@ -13,8 +14,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.newrobot.pedropathing.Constants;
 
-@Autonomous(name = "Cyber Salam Auto Red Stilgar")
-public class Auto extends LinearOpMode {
+@Autonomous(name = "Cyber Salam Auto Blue Stilgar")
+public class AutoBlue extends LinearOpMode {
     private Follower follower;
     private int pathState;
     private double SHOOTING_TIME = 3;
@@ -22,18 +23,18 @@ public class Auto extends LinearOpMode {
 
     double INTAKE_IN_POWER = 1;
 
-    private final Pose START_POSE = new Pose(123, 123.8, Math.toRadians(38));
-    private final Pose SHOOT_POS = new Pose(96, 96, Math.toRadians(45));
+    private final Pose START_POSE = new Pose(21, 123.8, Math.toRadians(142));
+    private final Pose SHOOT_POS = new Pose(48, 96, Math.toRadians(135));
 
-    private final Pose COLLECT_POS_1 = new Pose(90, 96, Math.toRadians(0));
-    private final Pose COLLECT_POS_3 = new Pose(114, 96, Math.toRadians(0));
+    private final Pose COLLECT_POS_1 = new Pose(54, 90, Math.toRadians(180));
+    private final Pose COLLECT_POS_3 = new Pose(30, 90, Math.toRadians(180));
 
-    private final Pose COLLECT_POS_4 = new Pose(90, 72, Math.toRadians(0));
-    private final Pose COLLECT_POS_6 = new Pose(114, 72, Math.toRadians(0));
+    private final Pose COLLECT_POS_4 = new Pose(54, 64, Math.toRadians(180));
+    private final Pose COLLECT_POS_6 = new Pose(30, 64, Math.toRadians(180));
 
-    private final Pose COLLECT_POS_7 = new Pose(90, 48, Math.toRadians(0));
-    private final Pose COLLECT_POS_9 = new Pose(114, 48, Math.toRadians(0));
-    private final Pose PARK = new Pose(110, 80, Math.toRadians(0));
+    private final Pose COLLECT_POS_7 = new Pose(54, 39, Math.toRadians(180));
+    private final Pose COLLECT_POS_9 = new Pose(30, 39, Math.toRadians(180));
+    private final Pose PARK = new Pose(23, 96, Math.toRadians(180));
 
     private Path smallMove;
     private PathChain collecting1, collecting2, collecting3, backToShot1, backToShot2, backToShot3, Park;
@@ -48,7 +49,7 @@ public class Auto extends LinearOpMode {
                 .addPath(new BezierLine(SHOOT_POS, COLLECT_POS_1))
                 .setLinearHeadingInterpolation(SHOOT_POS.getHeading(), COLLECT_POS_1.getHeading())
                 .addPath(new BezierLine(COLLECT_POS_1, COLLECT_POS_3))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
 
         backToShot1 = follower.pathBuilder()
@@ -62,7 +63,7 @@ public class Auto extends LinearOpMode {
                 .addPath(new BezierLine(SHOOT_POS, COLLECT_POS_4))
                 .setLinearHeadingInterpolation(SHOOT_POS.getHeading(), COLLECT_POS_4.getHeading())
                 .addPath(new BezierLine(COLLECT_POS_4, COLLECT_POS_6))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
 
         backToShot2 = follower.pathBuilder()
@@ -74,7 +75,7 @@ public class Auto extends LinearOpMode {
                 .addPath(new BezierLine(SHOOT_POS, COLLECT_POS_7))
                 .setLinearHeadingInterpolation(SHOOT_POS.getHeading(), COLLECT_POS_7.getHeading())
                 .addPath(new BezierLine(COLLECT_POS_7, COLLECT_POS_9))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
 
         backToShot3 = follower.pathBuilder()
@@ -222,7 +223,7 @@ public class Auto extends LinearOpMode {
             case 17:
                 shooter.setVelocity(1600);
 //                if (actionTimer.seconds() > 2)
-                    intake3.setPower(1);
+                intake3.setPower(1);
                 if (actionTimer.seconds() > SHOOTING_TIME) {
                     intake3.setPower(0);
                     pathState++;

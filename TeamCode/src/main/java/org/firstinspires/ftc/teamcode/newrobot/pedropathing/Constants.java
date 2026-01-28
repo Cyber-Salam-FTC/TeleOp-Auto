@@ -40,14 +40,14 @@ public class Constants {
             ))
             .centripetalScaling(0.009);
     public static PathConstraints pathConstraints = new PathConstraints(
-            0.995,
             1.0,
-            2.0,
-            0.009,
-            5,
-            60,
+            1.0,
+            2.5,
+            0.02,
             10,
-            50
+            80,
+            15,
+            200
     );
     public static PinpointConstants localizerConstants = new PinpointConstants()
             .forwardPodY(0)
