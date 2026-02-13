@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.newrobot.pedropathing.Constants;
 
-@Autonomous(name = "Cyber Salam Auto Blue Stilgar")
+@Autonomous(name = "Cyber Salam Auto Blue Stilgard")
 public class AutoBlue extends LinearOpMode {
     private Follower follower;
     private int pathState;
@@ -27,13 +27,13 @@ public class AutoBlue extends LinearOpMode {
     private final Pose SHOOT_POS = new Pose(48, 96, Math.toRadians(135));
 
     private final Pose COLLECT_POS_1 = new Pose(54, 90, Math.toRadians(180));
-    private final Pose COLLECT_POS_3 = new Pose(30, 90, Math.toRadians(180));
+    private final Pose COLLECT_POS_3 = new Pose(25, 90, Math.toRadians(180));
 
     private final Pose COLLECT_POS_4 = new Pose(54, 64, Math.toRadians(180));
-    private final Pose COLLECT_POS_6 = new Pose(30, 64, Math.toRadians(180));
+    private final Pose COLLECT_POS_6 = new Pose(25, 64, Math.toRadians(180));
 
-    private final Pose COLLECT_POS_7 = new Pose(54, 39, Math.toRadians(180));
-    private final Pose COLLECT_POS_9 = new Pose(30, 39, Math.toRadians(180));
+    private final Pose COLLECT_POS_7 = new Pose(54, 42, Math.toRadians(180));
+    private final Pose COLLECT_POS_9 = new Pose(20, 42, Math.toRadians(180));
     private final Pose PARK = new Pose(23, 96, Math.toRadians(180));
 
     private Path smallMove;
@@ -202,7 +202,7 @@ public class AutoBlue extends LinearOpMode {
                 break;
             case 13:
                 startIntake();
-                follower.followPath(collecting3, 0.85, true);
+                follower.followPath(collecting3, 0.75, true);
                 pathState++;
                 break;
             case 14:

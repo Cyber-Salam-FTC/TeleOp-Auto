@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.newrobot.cybersalam.hardware.MecanumDrive;
 
-@TeleOp(name = "Cyber Salam - Stilgar TeleOp")
+@TeleOp(name = "Cyber Salam - Stilgard TeleOp")
 public class MainOp extends LinearOpMode {
     double forward, strafe, rotate, distance;
     double nextAlertTime = 0;
@@ -96,25 +96,25 @@ public class MainOp extends LinearOpMode {
             drive.drive(forward, strafe, rotate);
 
             if (gamepad2.circle) {
-                intakeState = 0;
-            } else if (gamepad2.cross) {
-                intakeState = 1;
-            } else if (gamepad2.triangle) {
-                intakeState = -1;
+                stopMainIntake(intake1, intake2);
             }
 
-            if (intakeState == 1) {
+            if (gamepad2.cross) {
                 startMainIntake(intake1, intake2);
-            } else if (intakeState == -1) {
-                intakeMainOut(intake1, intake2);
             } else {
                 stopMainIntake(intake1, intake2);
             }
 
             if (gamepad2.square) {
                 intake3.setPower(PUSH_IN_POWER);
+                startMainIntake(intake1, intake2);
             } else {
                 intake3.setPower(0);
+                stopMainIntake(intake1, intake2);
+            }
+
+            if (gamepad2.triangle) {
+                intakeMainOut(intake1, intake2);
             }
 
             if (gamepad2.dpad_up) {
@@ -130,6 +130,10 @@ public class MainOp extends LinearOpMode {
             }
 
             if (gamepad2.dpad_right) {
+                shooter.setVelocity(2300);
+            }
+
+            if (gamepad2.dpad_left) {
                 shooter.setVelocity(1600);
             }
 
@@ -141,6 +145,7 @@ public class MainOp extends LinearOpMode {
         }
     }
 
+    //    A quadratic formula used to find the distance based on the target area (parameter 'ta' in this calculation)
     public double getDistanceFromTag(double ta) {
         double scale = 72.06169;
         double power = -0.509117;
@@ -148,9 +153,10 @@ public class MainOp extends LinearOpMode {
         return distance;
     }
 
+//    A power formula used to find a target velocity based on the distance (parameter dist in this calculation)
     public double getVelocity(double dist) {
-        double a = 0.29714;
-        return ((a*Math.pow(dist, 2)) + (20.07681*dist) + 0);
+        double a = 428.51439;
+        return (a * Math.pow(1.02249, dist));
     }
 
     public void startMainIntake(DcMotor motor1, DcMotor motor2) {

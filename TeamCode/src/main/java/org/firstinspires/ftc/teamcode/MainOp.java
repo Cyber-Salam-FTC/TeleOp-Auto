@@ -111,6 +111,7 @@ public class MainOp extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+            telemetry.update();
 
             limelight3A.start();
 

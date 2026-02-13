@@ -1,2 +1,24 @@
-include ':FtcRobotController'
+pluginManagement {
+    repositories {
+        maven { url = "https://repo.dairy.foundation/releases" }
+        maven { url = "https://maven.frozenmilk.dev/repository/maven-public/" }
+        gradlePluginPortal()
+        mavenCentral()
+        google()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = 'https://repo.dairy.foundation/releases' } // Corrected URL for frozenmilk
+        maven { url = 'https://maven.pedropathing.com/' }
+        maven { url = 'https://jitpack.io' }
+        maven { url = 'https://mymaven.bylazar.com/releases' } // Added repository for bylazar
+    }
+}
+
 include ':TeamCode'
+include ':FtcRobotController'

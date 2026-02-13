@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.newrobot.pedropathing.Constants;
 
-@Autonomous(name = "Cyber Salam Auto Red Stilgar")
+@Autonomous(name = "Cyber Salam Auto Red Stilgard")
 public class Auto extends LinearOpMode {
     private Follower follower;
     private int pathState;
