@@ -50,7 +50,7 @@ public class Constants {
             50
     );
     public static PinpointConstants localizerConstants = new PinpointConstants()
-            .forwardPodY(-7.0)
+            .forwardPodY(7.0)
             .strafePodX(7.0)
             .distanceUnit(DistanceUnit.INCH)
             .hardwareMapName("pinpointComputer")
@@ -68,6 +68,8 @@ public class Constants {
             .leftRearMotorDirection(DcMotor.Direction.REVERSE)
             .rightFrontMotorDirection(DcMotor.Direction.FORWARD)
             .rightRearMotorDirection(DcMotor.Direction.FORWARD);
+//            .xVelocity()
+//            .yVelocity();
 
 
     public static Follower createFollower(HardwareMap hardwareMap) {
