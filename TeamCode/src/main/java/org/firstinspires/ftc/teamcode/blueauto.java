@@ -13,29 +13,28 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 
-
-@Autonomous(name = "red auto")
-public class redauto extends LinearOpMode {
+@Autonomous(name = "blue auto")
+public class blueauto extends LinearOpMode {
     private Follower follower;
     private int pathState;
-    private ElapsedTime actionTimer = new ElapsedTime();
-
+    
     getSpeeds speeds = new getSpeeds();
+    private ElapsedTime actionTimer = new ElapsedTime();
 
     double INTAKE_IN_POWER = 1;
 
-    private final Pose START_POSE = new Pose(123, 123.8, Math.toRadians(38));
-    private final Pose SHOOT_POS = new Pose(96, 96, Math.toRadians(45));
+    private final Pose START_POSE = new Pose(21, 123.8, Math.toRadians(142));
+    private final Pose SHOOT_POS = new Pose(48, 96, Math.toRadians(135));
 
-    private final Pose COLLECT_POS_1 = new Pose(90, 87, Math.toRadians(0));
-    private final Pose COLLECT_POS_3 = new Pose(119, 87, Math.toRadians(0));
+    private final Pose COLLECT_POS_1 = new Pose(54, 85, Math.toRadians(180));
+    private final Pose COLLECT_POS_3 = new Pose(25, 85, Math.toRadians(180));
 
-    private final Pose COLLECT_POS_4 = new Pose(90, 64, Math.toRadians(0));
-    private final Pose COLLECT_POS_6 = new Pose(115, 64, Math.toRadians(0));
+    private final Pose COLLECT_POS_4 = new Pose(54, 62, Math.toRadians(180));
+    private final Pose COLLECT_POS_6 = new Pose(29, 62, Math.toRadians(180));
 
-    private final Pose COLLECT_POS_7 = new Pose(90, 38, Math.toRadians(0));
-    private final Pose COLLECT_POS_9 = new Pose(119, 38, Math.toRadians(0));
-    private final Pose PARK = new Pose(110, 80, Math.toRadians(0));
+    private final Pose COLLECT_POS_7 = new Pose(54, 38, Math.toRadians(180));
+    private final Pose COLLECT_POS_9 = new Pose(25, 38, Math.toRadians(180));
+    private final Pose PARK = new Pose(34, 64, Math.toRadians(180));
 
     private Path smallMove;
     private PathChain collecting1, collecting2, collecting3, backToShot1, backToShot2, backToShot3, Park;
@@ -56,14 +55,14 @@ public class redauto extends LinearOpMode {
                 .addPath(new BezierLine(COLLECT_POS_3, SHOOT_POS))
                 .setLinearHeadingInterpolation(COLLECT_POS_3.getHeading(), SHOOT_POS.getHeading())
                 // START SHOOTER WHEN 70% OF THE WAY THERE (ik crazy)
-                .addParametricCallback(0.7, () -> shooter.setVelocity(1600))
+                .addParametricCallback(0.7, () -> shooter.setVelocity(speeds.SHOOTER_VELOCITY))
                 .build();
 
         collecting2 = follower.pathBuilder()
                 .addPath(new BezierLine(SHOOT_POS, COLLECT_POS_4))
                 .setLinearHeadingInterpolation(SHOOT_POS.getHeading(), COLLECT_POS_4.getHeading())
                 .addPath(new BezierLine(COLLECT_POS_4, COLLECT_POS_6))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setLinearHeadingInterpolation(COLLECT_POS_4.getHeading(), COLLECT_POS_6.getHeading())
                 .build();
 
         backToShot2 = follower.pathBuilder()
@@ -75,7 +74,7 @@ public class redauto extends LinearOpMode {
                 .addPath(new BezierLine(SHOOT_POS, COLLECT_POS_7))
                 .setLinearHeadingInterpolation(SHOOT_POS.getHeading(), COLLECT_POS_7.getHeading())
                 .addPath(new BezierLine(COLLECT_POS_7, COLLECT_POS_9))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setLinearHeadingInterpolation(COLLECT_POS_7.getHeading(), COLLECT_POS_9.getHeading())
                 .build();
 
         backToShot3 = follower.pathBuilder()
@@ -115,7 +114,6 @@ public class redauto extends LinearOpMode {
             telemetry.addData("Path State", pathState);
             telemetry.addData("x", follower.getPose().getX());
             telemetry.addData("y", follower.getPose().getY());
-            telemetry.addData("velocity", shooter.getVelocity());
             telemetry.update();
         }
     }
@@ -256,3 +254,4 @@ public class redauto extends LinearOpMode {
         intake.setPower(0);
     }
 }
+

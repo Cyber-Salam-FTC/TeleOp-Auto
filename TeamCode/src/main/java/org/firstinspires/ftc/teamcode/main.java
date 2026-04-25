@@ -22,6 +22,7 @@ public class main extends LinearOpMode {
         DcMotor rightRear = hardwareMap.get(DcMotor.class, "rightRear");
         DcMotorEx shooter = hardwareMap.get(DcMotorEx.class, "shooter");
         DcMotor intake = hardwareMap.get(DcMotor.class, "intake");
+        DcMotor moveOut = hardwareMap.get(DcMotor.class, "moveOut");
 
         Follower follower = Constants.createFollower(hardwareMap);
 
@@ -30,16 +31,28 @@ public class main extends LinearOpMode {
 
         double CLOSE_VELOCITY = 1011;
         double INTAKE_SPEED = 1;
+        double GATE_SPEED = 0.85;
+
+        boolean shooting = true;
 
         MecanumDrive drive = new MecanumDrive();
         drive.init(hardwareMap);
 
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         telemetry.update();
 
         waitForStart();
 
         while (opModeIsActive()) {
+
+            telemetry.update();
+            follower.update();
+            Pose currentPose = follower.getPose();
+
             Pose startPose = new Pose(100, 72, Math.toRadians(90));
             follower.setStartingPose(startPose);
 
@@ -47,16 +60,13 @@ public class main extends LinearOpMode {
             double strafe = gamepad1.left_stick_x;
             double rotate = gamepad1.right_stick_x;
 
-            Pose currentPose = follower.getPose();
-
             drive.drive(forward, strafe, rotate);
             Pose testPose = new Pose(72, 72);
-
 
             double VELOCITY = autoTrackVelocity(currentPose);
 
             if (gamepad2.dpad_left) {
-                shooter.setVelocity(VELOCITY);
+                shooter.setVelocity(autoTrackVelocity(currentPose));
             }
 
             if (gamepad2.dpad_right) {
@@ -75,6 +85,15 @@ public class main extends LinearOpMode {
                 intake.setPower(0);
             }
 
+            if (gamepad2.square) {
+                moveOut.setPower(GATE_SPEED);
+            } else {
+                moveOut.setPower(0);
+            }
+
+            if (gamepad2.triangle) {
+                intake.setPower(-1);
+            }
 
             telemetry.addData("Current velocity (TPS)", shooter.getVelocity());
             telemetry.addData("pos", follower.getPose());
@@ -83,7 +102,7 @@ public class main extends LinearOpMode {
     }
 
     public double rpmToTps(double rpm) {
-        return rpm / (28/60);
+        return rpm * 28.0 / 60.0;
     }
 
     public double autoTrackVelocity(Pose currentPose) {
@@ -93,8 +112,13 @@ public class main extends LinearOpMode {
         double g = 9.81;
         double wheelR = mmToM(36);
 
-        double initVel = Math.sqrt((g * horizontalDist) /
-                (Math.sin(2 * angle) - (2 * Math.cos(angle) * Math.cos(angle) * heightDiff / horizontalDist)));
+        if (horizontalDist <= 0) return 0;
+
+        double denominator = Math.sin(2 * angle) - (2 * Math.cos(angle) * Math.cos(angle) * heightDiff / horizontalDist);
+
+        if (denominator <= 0) return 0;
+
+        double initVel = Math.sqrt((g * horizontalDist) / denominator);
 
         double rpm = getRpm(initVel, wheelR);
 
@@ -115,7 +139,7 @@ public class main extends LinearOpMode {
     }
 
     public double getRpm(double initVel, double wheelR) {
-        return  (initVel / (2 * Math.PI * wheelR)) * 60;
+        return (initVel / (2 * Math.PI * wheelR)) * 60;
     }
 
     public double mmToM(double mm) {

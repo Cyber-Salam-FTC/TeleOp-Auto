@@ -50,12 +50,12 @@ public class Constants {
             50
     );
     public static PinpointConstants localizerConstants = new PinpointConstants()
-            .forwardPodY(7.0)
-            .strafePodX(7.0)
+            .forwardPodY(-9.6913507874)
+            .strafePodX(-9.6913507874)
             .distanceUnit(DistanceUnit.INCH)
             .hardwareMapName("pinpointComputer")
             .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
-            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
+            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
     public static MecanumConstants drivetrain = new MecanumConstants()

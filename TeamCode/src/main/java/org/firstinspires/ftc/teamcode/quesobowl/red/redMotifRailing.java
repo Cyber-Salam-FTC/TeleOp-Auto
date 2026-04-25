@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.quesobowl.red;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
@@ -11,11 +11,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.getSpeeds;
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 
 
 @Autonomous(name = "red auto")
-public class redauto extends LinearOpMode {
+public class redMotifRailing extends LinearOpMode {
     private Follower follower;
     private int pathState;
     private ElapsedTime actionTimer = new ElapsedTime();
@@ -24,7 +26,7 @@ public class redauto extends LinearOpMode {
 
     double INTAKE_IN_POWER = 1;
 
-    private final Pose START_POSE = new Pose(123, 123.8, Math.toRadians(38));
+    private final Pose START_POSE = new Pose(20, 117, Math.toRadians(270));
     private final Pose SHOOT_POS = new Pose(96, 96, Math.toRadians(45));
 
     private final Pose COLLECT_POS_1 = new Pose(90, 87, Math.toRadians(0));
