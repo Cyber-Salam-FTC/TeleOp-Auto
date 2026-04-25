@@ -50,8 +50,8 @@ public class blueBottomLeft extends LinearOpMode {
     Pose intake2DeepPose = new Pose(20, 57, Math.toRadians(180));
     Pose intake3HeadingPose = new Pose(60, 81, Math.toRadians(180));
     Pose intake3DeepPose = new Pose(20, 81, Math.toRadians(180));
-    Pose midpoint = new Pose(60, 12);
-    Pose parkPose = new Pose(44, 52);
+    Pose midpoint = new Pose(75, 6);
+    Pose parkPose = new Pose(60, 33);
 
     @Override
     public void runOpMode() {
@@ -76,6 +76,9 @@ public class blueBottomLeft extends LinearOpMode {
 
         SHOOTING_TIME_MS = (long) (speeds.SHOOTING_TIME * 1000);
         follower.setStartingPose(startPose);
+
+        telemetry.addData("Value at start", initMidpointComplete);
+        telemetry.update();
 
         waitForStart();
         actionTimer.reset();
